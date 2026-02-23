@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  # 1. MinIO Servisi
+  minio:
+    image: minio/minio:latest
+    container_name: dental-minio
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: password123!
+    volumes:
+      - ./docker-data/minio:/data
+
+  # 2. Seq Servisi (Hata burada hizalama yüzünden çıkıyordu)
+  # Dikkat: 'seq' kelimesi yukarıdaki 'minio' ile aynı hizada olmalı
+  seq:
+    image: datalust/seq:2023.4
+    container_name: dental-seq
+    environment:
+      ACCEPT_EULA: "Y"
+    ports:
+      - "5341:80"
+    volumes:
+      - ./docker-data/seq:/data

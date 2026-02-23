@@ -1,0 +1,73 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card">
+            <h5>Randevu Listesi</h5>
+            
+            <p-table 
+                #dt 
+                [value]="appointments" 
+                [rows]="10" 
+                [loading]="loading" 
+                [paginator]="true" 
+                [globalFilterFields]="['patientName','description']" 
+                responsiveLayout="scroll"
+                [rowHover]="true"
+                dataKey="id"
+                [showCurrentPageReport]="true">
+
+                <ng-template pTemplate="caption">
+                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                        <span class="block mt-2 md:mt-0 p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')" placeholder="Hasta Ara..." />
+                        </span>
+                        <button pButton pRipple label="Yeni Randevu" icon="pi pi-plus" class="p-button-primary mr-2" routerLink="/appointments/create"></button>
+                    </div>
+                </ng-template>
+
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th pSortableColumn="date">Tarih / Saat <p-sortIcon field="date"></p-sortIcon></th>
+                        <th pSortableColumn="patientName">Hasta Adı <p-sortIcon field="patientName"></p-sortIcon></th>
+                        <th>Açıklama</th>
+                        <th>Durum</th>
+                        <th>İşlemler</th>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-appointment>
+                    <tr>
+                        <td>
+                            <span class="p-column-title">Tarih</span>
+                            {{ appointment.date | date:'dd.MM.yyyy HH:mm' }}
+                        </td>
+                        <td>
+                            <span class="p-column-title">Hasta</span>
+                            {{ appointment.patientName || 'Belirtilmemiş' }}
+                        </td>
+                        <td>
+                            <span class="p-column-title">Açıklama</span>
+                            {{ appointment.notes }}
+                        </td>
+                        <td>
+                            <span class="p-column-title">Durum</span>
+                            <p-tag [value]="appointment.status || 'Bekliyor'" [severity]="getSeverity(appointment.status)"></p-tag>
+                        </td>
+                        <td>
+                            <div class="flex">
+                                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"></button>
+                                <button pButton pRipple icon="pi pi-check" class="p-button-rounded p-button-info" title="Tamamla"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="5" class="text-center p-4">Henüz planlanmış bir randevu yok.</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,17 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace DentalApp.Application.Features.Patients.Queries.GetAllPatients
+{
+    // Listede görünecek özet bilgiler
+    public record PatientDto(Guid Id, string FullName, string PhoneNumber);
+
+    // API'den dönecek ana cevap
+    public record GetAllPatientsResponse
+    {
+        public List<PatientDto> Patients { get; init; } = new();
+    }
+}

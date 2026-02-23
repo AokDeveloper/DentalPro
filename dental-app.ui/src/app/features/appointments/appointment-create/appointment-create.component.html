@@ -1,0 +1,52 @@
+<p-toast></p-toast>
+
+<div class="grid">
+    <div class="col-12 md:col-8 md:col-offset-2">
+        <div class="card p-fluid">
+            <h5>Kayıtlı Hastaya Randevu Ver</h5>
+            <p class="text-500 mb-4">Lütfen sistemde kayıtlı olan bir hastayı seçerek randevu tarihini belirleyin.</p>
+
+            <div class="field">
+                <label for="patient">Hasta Seçimi <span class="text-red-500">*</span></label>
+                <p-dropdown 
+                    id="patient" 
+                    [options]="patients" 
+                    [(ngModel)]="appointmentModel.patientId" 
+                    optionLabel="fullName" 
+                    optionValue="id" 
+                    [filter]="true" 
+                    filterBy="fullName" 
+                    [showClear]="true" 
+                    placeholder="Listeden bir hasta seçin veya adını yazın...">
+                </p-dropdown>
+            </div>
+
+            <div class="field">
+                <label for="date">Randevu Tarihi ve Saati <span class="text-red-500">*</span></label>
+                <p-calendar 
+    id="date" 
+    [(ngModel)]="appointmentModel.date" 
+    [showTime]="true" 
+    dateFormat="dd.mm.yy" 
+    placeholder="Tarih ve saat belirleyin">
+</p-calendar>
+            </div>
+
+            <div class="field">
+                <label for="description">İşlem Açıklaması / Not</label>
+                <textarea 
+    id="notes" 
+    pInputTextarea 
+    [(ngModel)]="appointmentModel.notes" 
+    rows="3" 
+    placeholder="Örn: Diş taşı temizliği...">
+</textarea>
+            </div>
+
+            <div class="flex justify-content-end mt-4">
+                <button pButton pRipple label="İptal" icon="pi pi-times" class="p-button-text p-button-secondary mr-2" routerLink="/appointments"></button>
+                <button pButton pRipple label="Randevuyu Kaydet" icon="pi pi-check" class="p-button-success" [loading]="loading" (click)="save()"></button>
+            </div>
+        </div>
+    </div>
+</div>

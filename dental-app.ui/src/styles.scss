@@ -1,0 +1,23 @@
+/* 1. PrimeNG Core (Temel Yapı) */
+@import "primeng/resources/primeng.min.css";
+@import "primeicons/primeicons.css";
+
+/* 2. TEMA AYARI (Hata veren satırı sildik, yerine orijinalini koyduk) */
+/* Sakai'nin kendi karışık teması yerine standart, temiz PrimeNG temasını kullanıyoruz */
+@import "primeng/resources/themes/lara-light-indigo/theme.css";
+
+/* 3. PrimeFlex (Grid Sistemi - Kaymaları önleyen kısım) */
+@import "primeflex/primeflex.scss";
+
+/* 4. Sakai Layout Stilleri (Sidebar, Topbar vb.) */
+@import "assets/layout/styles/layout/layout.scss";
+
+/* 5. Genel Ayarlar */
+body {
+    margin: 0;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: var(--surface-ground);
+    font-family: var(--font-family);
+}

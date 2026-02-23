@@ -1,0 +1,16 @@
++log
++login işlemleri
+cache
+ortak result sınıfı
+sql i dockera kurmak
+Hangfire
+
+
+
+Cache
+Hangfire
+Notificatin service
+Hata Toleransı ve "Retry" Politikaları
+elk
+rabit
+redis
