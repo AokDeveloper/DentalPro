@@ -20,7 +20,8 @@ namespace DentalApp.Application.Features.Patients.Commands.CreatePatient
                 request.FirstName,
                 request.LastName,
                 request.TCKN,
-                request.PhoneNumber
+                request.PhoneNumber,
+                request.BirthDate
             );
 
             // Veritabanına ekle

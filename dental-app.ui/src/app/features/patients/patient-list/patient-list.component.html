@@ -29,7 +29,9 @@
                 <ng-template pTemplate="header">
                     <tr>
                         <th pSortableColumn="fullName">Ad Soyad <p-sortIcon field="fullName"></p-sortIcon></th>
+                        <th pSortableColumn="tckn">Tc No <p-sortIcon field="tckn"></p-sortIcon></th>
                         <th pSortableColumn="phoneNumber">Telefon <p-sortIcon field="phoneNumber"></p-sortIcon></th>
+                        <th pSortableColumn="birthDate">Doğum Tarihi <p-sortIcon field="birthDate"></p-sortIcon></th>                        
                         <th>İşlemler</th>
                     </tr>
                 </ng-template>
@@ -40,11 +42,21 @@
                             <span class="p-column-title">Ad Soyad</span>
                             {{patient.fullName}}
                         </td>
-                        
+
+                          <td style="width:40%; min-width:10rem;">
+                            <span class="p-column-title">TC No</span>
+                            {{patient.tckn}}
+                        </td>
+
                         <td style="width:40%; min-width:10rem;">
                             <span class="p-column-title">Telefon</span>
                             {{patient.phoneNumber}}
                         </td>
+
+                          <td style="width:40%; min-width:10rem;">
+                            <span class="p-column-title">Doğum Tarihi</span>
+                            {{patient.birthDate}}
+                        </td>                      
 
                         <td style="width:20%; min-width:10rem;">
                             <div class="flex">

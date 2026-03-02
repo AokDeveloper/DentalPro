@@ -14,7 +14,7 @@ namespace DentalApp.Domain.Entities
         public string LastName { get; private set; }
         public string TCKN { get; private set; }
         public string PhoneNumber { get; private set; }
-        public DateTime? BirthDate { get; private set; }
+        public DateOnly BirthDate { get; private set; }
 
         public ICollection<Appointment> Appointments { get; private set; } = new List<Appointment>();
         public ICollection<TreatmentImage> TreatmentImages { get; private set; } = new List<TreatmentImage>();
@@ -23,7 +23,7 @@ namespace DentalApp.Domain.Entities
         {
         }
 
-        public Patient(string firstName, string lastName, string tckn, string phoneNumber)
+        public Patient(string firstName, string lastName, string tckn, string phoneNumber, DateOnly birthDate)
         {
             if (string.IsNullOrWhiteSpace(firstName)) throw new ArgumentException("İsim boş olamaz.");
 
@@ -31,6 +31,7 @@ namespace DentalApp.Domain.Entities
             LastName = lastName;
             TCKN = tckn;
             PhoneNumber = phoneNumber;
+            BirthDate = birthDate;
         }
         // Domain Behaviors (İş Mantığı Metotları)
         public void UpdateContactInfo(string newPhone)

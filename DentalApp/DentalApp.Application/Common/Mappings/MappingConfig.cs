@@ -17,7 +17,13 @@ namespace DentalApp.Application.Common.Mappings
         {
             // 1. Hasta Listesi Mapping Ayarı
             config.NewConfig<Patient, PatientDto>()
-                .Map(dest => dest.FullName, src => $"{src.FirstName} {src.LastName}");
+             .ConstructUsing(src => new PatientDto(
+                 src.Id,
+                 $"{src.FirstName} {src.LastName}",                 
+                 src.TCKN,
+                 src.PhoneNumber,
+                 src.BirthDate 
+             ));
             // İsim ve Soyismi birleştirip FullName yap dedik.
 
             // 2. Resim Listesi Mapping Ayarı

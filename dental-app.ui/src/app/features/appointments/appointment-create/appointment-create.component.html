@@ -1,51 +1,67 @@
 <p-toast></p-toast>
 
 <div class="grid">
-    <div class="col-12 md:col-8 md:col-offset-2">
+    <div class="col-12 md:col-8 mx-auto">
         <div class="card p-fluid">
-            <h5>Kayıtlı Hastaya Randevu Ver</h5>
-            <p class="text-500 mb-4">Lütfen sistemde kayıtlı olan bir hastayı seçerek randevu tarihini belirleyin.</p>
+            <h5>Yeni Randevu Oluştur</h5>
 
-            <div class="field">
-                <label for="patient">Hasta Seçimi <span class="text-red-500">*</span></label>
-                <p-dropdown 
-                    id="patient" 
+            <div class="field mt-4">
+                <label>Hasta Seçin</label>
+               <p-dropdown 
                     [options]="patients" 
                     [(ngModel)]="appointmentModel.patientId" 
                     optionLabel="fullName" 
                     optionValue="id" 
                     [filter]="true" 
                     filterBy="fullName" 
-                    [showClear]="true" 
-                    placeholder="Listeden bir hasta seçin veya adını yazın...">
+                    [showClear]="true"
+                    placeholder="Hasta seçiniz...">
                 </p-dropdown>
             </div>
 
             <div class="field">
-                <label for="date">Randevu Tarihi ve Saati <span class="text-red-500">*</span></label>
-                <p-calendar 
-    id="date" 
-    [(ngModel)]="appointmentModel.date" 
-    [showTime]="true" 
-    dateFormat="dd.mm.yy" 
-    placeholder="Tarih ve saat belirleyin">
-</p-calendar>
+                <label>Randevu Günü</label>
+               <p-calendar 
+                    [(ngModel)]="selectedDate" 
+                    [showIcon]="true" 
+                    (onSelect)="onDateSelect($event)" 
+                    placeholder="Tarih Seçiniz"
+                    dateFormat="dd.mm.yy"
+                    [minDate]="today" 
+                    [disabledDays]="[0, 6]"> 
+                </p-calendar>
             </div>
 
-            <div class="field">
-                <label for="description">İşlem Açıklaması / Not</label>
-                <textarea 
-    id="notes" 
-    pInputTextarea 
-    [(ngModel)]="appointmentModel.notes" 
-    rows="3" 
-    placeholder="Örn: Diş taşı temizliği...">
-</textarea>
+            <div class="field mt-4" *ngIf="selectedDate">
+                <label class="font-bold text-primary mb-3 block">Uygun Saatler</label>
+                
+                <div class="grid formgrid gap-2">
+                    <div class="col-fixed" *ngFor="let slot of timeSlots" style="width: 100px;">
+                        <button pButton pRipple 
+                                [label]="slot.time" 
+                                (click)="selectTime(slot)"
+                                [disabled]="slot.isBooked"
+                                [ngClass]="{
+                                    'p-button-danger': slot.isBooked, 
+                                    'p-button-outlined': !slot.isBooked && selectedTime !== slot.time
+                                }">
+                        </button>
+                    </div>
+                </div>
+
+                <small class="block mt-2 text-500">
+                    <i class="pi pi-info-circle mr-1"></i> 
+                    Kırmızı alanlar doludur. Lütfen mavi veya beyaz saatlerden birini seçin.
+                </small>
+            </div>
+
+            <div class="field mt-4">
+                <label>Notlar (Opsiyonel)</label>
+                <textarea pInputTextarea [(ngModel)]="appointmentModel.notes" rows="3"></textarea>
             </div>
 
             <div class="flex justify-content-end mt-4">
-                <button pButton pRipple label="İptal" icon="pi pi-times" class="p-button-text p-button-secondary mr-2" routerLink="/appointments"></button>
-                <button pButton pRipple label="Randevuyu Kaydet" icon="pi pi-check" class="p-button-success" [loading]="loading" (click)="save()"></button>
+                <button pButton label="Randevuyu Kaydet" icon="pi pi-check" class="p-button-success w-auto" [loading]="loading" (click)="save()"></button>
             </div>
         </div>
     </div>

@@ -9,6 +9,7 @@ namespace DentalApp.Application.Features.Patients.Commands.CreatePatient
         public string LastName { get; init; }
         public string TCKN { get; init; }
         public string PhoneNumber { get; init; }
+        public DateOnly BirthDate { get; set; }
     }
 
 }
