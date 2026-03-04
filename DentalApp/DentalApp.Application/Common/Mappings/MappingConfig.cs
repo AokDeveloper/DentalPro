@@ -28,7 +28,8 @@ namespace DentalApp.Application.Common.Mappings
 
             // 2. Resim Listesi Mapping Ayarı
             config.NewConfig<TreatmentImage, TreatmentImageDto>()
-                .Map(dest => dest.ImageUrl, src => src.ImageUrl);
+                  .Map(dest => dest.ImageUrl, src => src.ImageUrl);
+       
             // İsimler aynı olsa bile açıkça belirtmek bazen iyidir (Opsiyonel)
             config.NewConfig<Appointment, AppointmentDto>()
                 .Map(dest => dest.PatientName, src => $"{src.Patient.FirstName} {src.Patient.LastName}") // Ad Soyad Birleştirme

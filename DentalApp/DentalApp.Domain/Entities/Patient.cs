@@ -41,9 +41,9 @@ namespace DentalApp.Domain.Entities
             UpdatedOn = DateTime.UtcNow;
         }
 
-        public void AddImage(string imageUrl, TreatmentImageType type)
+        public void AddImage(string imageUrl, TreatmentImageType type, DateOnly recordDate, string notes)
         {
-            TreatmentImages.Add(new TreatmentImage(this.Id, imageUrl, type));
+            TreatmentImages.Add(new TreatmentImage(this.Id, imageUrl, type, recordDate,notes));
         }
     }
 }

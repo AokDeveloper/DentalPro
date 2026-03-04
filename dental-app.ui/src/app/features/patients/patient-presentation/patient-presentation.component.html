@@ -1,0 +1,61 @@
+<div class="grid grid-nogutter mt-2 border-round overflow-hidden shadow-3 surface-ground">
+    
+    <div class="col-12 md:col-6 p-1">
+        <div class="flex flex-column h-full surface-card border-round">
+            
+            <div class="flex align-items-center justify-content-between p-2 border-bottom-1 surface-border">
+                <span class="font-bold text-600">Önceki Durum</span>
+                <p-dropdown [options]="dateOptions" [(ngModel)]="leftSelectedImage" placeholder="Tarih Seç" styleClass="w-15rem"></p-dropdown>
+            </div>
+
+            <div class="flex-grow-1 flex align-items-center justify-content-center bg-black-alpha-90" style="height: 65vh;">
+                <p-image *ngIf="leftSelectedImage" 
+                    [src]="getFullImageUrl(leftSelectedImage.imageUrl)" 
+                    alt="Önce" 
+                    width="100%" 
+                    [preview]="true" 
+                    styleClass="w-full h-full flex align-items-center justify-content-center"
+                    imageClass="max-w-full max-h-full object-fit-contain">
+                </p-image>
+                
+                <span *ngIf="!leftSelectedImage" class="text-400">Bu açı için geçmiş kayıt yok</span>
+            </div>
+
+            <div class="p-2 text-sm text-center text-700 font-italic surface-overlay" style="min-height: 40px;">
+                <ng-container *ngIf="leftSelectedImage?.notes">
+                    <i class="pi pi-info-circle mr-1"></i> {{ leftSelectedImage.notes }}
+                </ng-container>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 md:col-6 p-1">
+        <div class="flex flex-column h-full surface-card border-round">
+            
+            <div class="flex align-items-center justify-content-between p-2 border-bottom-1 surface-border">
+                <span class="font-bold text-primary">Mevcut Durum</span>
+                <p-dropdown [options]="dateOptions" [(ngModel)]="rightSelectedImage" placeholder="Tarih Seç" styleClass="w-15rem"></p-dropdown>
+            </div>
+
+            <div class="flex-grow-1 flex align-items-center justify-content-center bg-black-alpha-90" style="height: 65vh;">
+                <p-image *ngIf="rightSelectedImage" 
+                    [src]="getFullImageUrl(rightSelectedImage.imageUrl)" 
+                    alt="Sonra" 
+                    width="100%" 
+                    [preview]="true" 
+                    styleClass="w-full h-full flex align-items-center justify-content-center"
+                    imageClass="max-w-full max-h-full object-fit-contain">
+                </p-image>
+                
+                <span *ngIf="!rightSelectedImage" class="text-400">Bu açı için güncel kayıt yok</span>
+            </div>
+
+            <div class="p-2 text-sm text-center text-primary font-italic surface-overlay" style="min-height: 40px;">
+                <ng-container *ngIf="rightSelectedImage?.notes">
+                    <i class="pi pi-check-circle mr-1"></i> {{ rightSelectedImage.notes }}
+                </ng-container>
+            </div>
+        </div>
+    </div>
+
+</div>

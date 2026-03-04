@@ -12,6 +12,8 @@ namespace DentalApp.WebApi.Endpoints.Patients
         public Guid PatientId { get; set; }
         public IFormFile File { get; set; } // Dosya buraya gelecek
         public TreatmentImageType Type { get; set; }
+        public DateOnly RecordDate { get; set; }
+        public string? Notes { get; set; }
     }
 
     public class UploadImage : Endpoint<UploadImageRequest, Guid>
@@ -46,7 +48,9 @@ namespace DentalApp.WebApi.Endpoints.Patients
                 FileStream = stream,
                 FileName = req.File.FileName,
                 ContentType = req.File.ContentType,
-                ImageType = req.Type
+                ImageType = req.Type,
+                RecordDate= req.RecordDate,
+                Notes=req.Notes
             };
 
             var result = await _sender.Send(command, ct);

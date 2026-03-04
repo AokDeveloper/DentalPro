@@ -1,0 +1,41 @@
+<p-toast></p-toast>
+
+<div class="card border-round shadow-2 p-4 surface-card">
+    <h3 class="text-primary mb-4 border-bottom-1 surface-border pb-2">Yeni Klinik Fotoğraf Yükle</h3>
+
+    <div class="p-fluid grid">
+        <div class="field col-12 md:col-6">
+            <label class="font-bold">Fotoğraf Tipi (Açı) *</label>
+            <p-dropdown [options]="angleTypes" [(ngModel)]="selectedAngle" placeholder="Açı Seçiniz"></p-dropdown>
+        </div>
+
+        <div class="field col-12 md:col-6">
+            <label class="font-bold">Klinik Çekim Tarihi *</label>
+            <p-calendar [(ngModel)]="recordDate" dateFormat="dd.mm.yy" [showIcon]="true"></p-calendar>
+        </div>
+
+        <div class="field col-12">
+            <label class="font-bold">Klinik Notlar (Opsiyonel)</label>
+            <textarea pInputTextarea [(ngModel)]="notes" rows="3" placeholder="Örn: Alt çeneye elastik eklendi..."></textarea>
+        </div>
+
+        <div class="field col-12 mt-3">
+            <label class="font-bold">Fotoğraf Dosyası *</label>
+            <p-fileUpload 
+                #fileUploadControl
+                mode="basic" 
+                chooseLabel="Bilgisayardan Seç" 
+                chooseIcon="pi pi-image"
+                accept="image/*" 
+                maxFileSize="10000000" 
+                (onSelect)="onFileSelect($event)"
+                styleClass="p-button-outlined p-button-secondary w-full">
+            </p-fileUpload>
+            <small class="text-500 mt-1 block" *ngIf="selectedFile">Seçilen: {{ selectedFile.name }}</small>
+        </div>
+
+        <div class="col-12 flex justify-content-end mt-4 border-top-1 surface-border pt-4">
+            <button pButton pRipple label="Kaydet ve Yükle" icon="pi pi-cloud-upload" class="p-button-primary w-full md:w-auto" (click)="upload()"></button>
+        </div>
+    </div>
+</div>

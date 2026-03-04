@@ -19,6 +19,8 @@ namespace DentalApp.Application.Features.Patients.Commands.UploadImage
         public string FileName { get; set; }
         public string ContentType { get; set; } // image/jpeg vb.
         public TreatmentImageType ImageType { get; set; }
+        public DateOnly RecordDate { get; set; }
+        public string? Notes { get; set; }
     }
 
     // 2. İŞLEYİCİ
@@ -52,7 +54,7 @@ namespace DentalApp.Application.Features.Patients.Commands.UploadImage
 
             // 4. --- DEĞİŞEN KISIM BURASI ---
             // Resmi doğrudan Entity olarak oluşturuyoruz.
-            var newImage = new TreatmentImage(request.PatientId, imageUrl, request.ImageType);
+            var newImage = new TreatmentImage(request.PatientId, imageUrl, request.ImageType, request.RecordDate, request.Notes);
 
             // Hasta üzerinden değil, doğrudan Resim tablosuna ekliyoruz.
             // Bu sayede EF Core "Hasta güncellendi mi?" karmaşasına girmez, sadece Insert yapar.
