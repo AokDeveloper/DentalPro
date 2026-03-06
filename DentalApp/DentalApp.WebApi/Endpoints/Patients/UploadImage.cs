@@ -29,6 +29,7 @@ namespace DentalApp.WebApi.Endpoints.Patients
         {
             Post("/api/patients/images");
             AllowFileUploads(); // <-- DİKKAT: Dosya yüklemeye izin veriyoruz
+            AllowAnonymous();
         }
 
         public override async Task HandleAsync(UploadImageRequest req, CancellationToken ct)

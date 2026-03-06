@@ -55,26 +55,34 @@
 
                         <td style="width:40%; min-width:10rem;">
                             <span class="p-column-title">Doğum Tarihi</span>
-                            {{patient.birthDate}}
-                        </td>                      
+                            {{ patient.birthDate | date:'dd.MM.yyyy' }}
+                        </td>                   
 
-                        <td style="width:20%; min-width:10rem;">
-                            <div class="flex">
-                                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"></button>
-                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"></button>
-                                
-                                <button 
-                                        pButton 
-                                        pRipple 
-                                        icon="pi pi-images" 
-                                        class="p-button-rounded p-button-info p-button-text" 
-                                        pTooltip="Before/After Sunumu"
-                                        [routerLink]="['/patients/presentation', patient.id]">
-                                </button>
-                                
-                                <button pButton pRipple icon="pi pi-camera" class="p-button-rounded p-button-success p-button-text" pTooltip="Fotoğraf Yükle" (click)="openUploadDialog(patient.id)"></button>
-                            </div>
-                        </td>
+                       <td style="width:20%; min-width:10rem;">
+    <div class="flex">
+        <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" pTooltip="Düzenle"></button>
+        
+        <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning mr-2" pTooltip="Sil"></button>
+        
+        <button 
+            pButton 
+            pRipple 
+            icon="pi pi-images" 
+            class="p-button-rounded p-button-info mr-2" 
+            pTooltip="Before/After Sunumu"
+            [routerLink]="['/patients/presentation', patient.id]">
+        </button>
+        
+        <button 
+            pButton 
+            pRipple 
+            icon="pi pi-camera" 
+            class="p-button-rounded p-button-primary" 
+            pTooltip="Fotoğraf Yükle" 
+            (click)="openUploadDialog(patient.id)">
+        </button>
+    </div>
+</td>
                     </tr>
                 </ng-template>
 
@@ -89,7 +97,7 @@
 </div>
 
 <p-dialog 
-    header="Kliniğe Yeni Fotoğraf Yükle" 
+    header="Hastaya Yeni Fotoğraf Yükle" 
     [(visible)]="uploadDialogVisible" 
     [modal]="true" 
     [style]="{width: '50vw'}" 

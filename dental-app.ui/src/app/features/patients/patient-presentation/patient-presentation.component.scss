@@ -1,0 +1,77 @@
+/* Slider Konteynerı */
+.before-after-container {
+    position: relative;
+    width: 100%;
+    height: 75vh;
+    overflow: hidden;
+    background-color: #000;
+}
+
+/* Üst Üste Binen Resimler */
+.compare-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* Görünmez ama tıklanabilir native slider */
+.slider-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    appearance: none;
+    -webkit-appearance: none;
+    outline: none;
+    margin: 0;
+    z-index: 20;
+    cursor: ew-resize;
+}
+
+/* Standart Çubuğu Gizliyoruz */
+.slider-overlay::-webkit-slider-thumb {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 4px;
+    height: 100vh;
+    background: transparent;
+}
+.slider-overlay::-moz-range-thumb {
+    width: 4px;
+    height: 100vh;
+    background: transparent;
+    border: none;
+}
+
+/* Kendi Çizdiğimiz Dikey Çizgi ve Tutamak */
+.slider-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    z-index: 10;
+    pointer-events: none;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.slider-button {
+    width: 40px;
+    height: 40px;
+    background-color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    color: #333;
+}
