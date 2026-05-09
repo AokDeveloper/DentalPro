@@ -3,8 +3,9 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { ListResponseModel, ResponseModel, SingleResponseModel } from '../models/response-model';
 
-// "export" kelimesi EN BAŞTA olmak zorunda
-export abstract class BaseService<T> {
+// 🌟 DİKKAT: <T> yerine <T extends { id: number | string }> yazarak 
+// TypeScript'e bu objenin kesinlikle bir ID'si olduğunu garanti ediyoruz.
+export abstract class BaseService<T extends { id: number | string }> {
   
   protected apiUrl: string;
 
@@ -19,7 +20,8 @@ export abstract class BaseService<T> {
     return this.httpClient.get<ListResponseModel<T>>(this.apiUrl);
   }
 
-  getById(id: number): Observable<SingleResponseModel<T>> {
+  // Not: ID'ler GUID (string) veya int (number) olabileceği için 'number | string' yapmak en güvenlisidir.
+  getById(id: number | string): Observable<SingleResponseModel<T>> {
     return this.httpClient.get<SingleResponseModel<T>>(`${this.apiUrl}/${id}`);
   }
 
@@ -27,11 +29,12 @@ export abstract class BaseService<T> {
     return this.httpClient.post<ResponseModel>(this.apiUrl, entity);
   }
 
+  // 🌟 İŞTE DÜZELTİLEN YER: Artık C#'ın beklediği gibi URL'nin sonuna ID'yi otomatik ekliyor
   update(entity: T): Observable<ResponseModel> {
-    return this.httpClient.put<ResponseModel>(this.apiUrl, entity);
+    return this.httpClient.put<ResponseModel>(`${this.apiUrl}/${entity.id}`, entity);
   }
 
-  delete(id: number): Observable<ResponseModel> {
+  delete(id: number | string): Observable<ResponseModel> {
     return this.httpClient.delete<ResponseModel>(`${this.apiUrl}/${id}`);
   }
 }

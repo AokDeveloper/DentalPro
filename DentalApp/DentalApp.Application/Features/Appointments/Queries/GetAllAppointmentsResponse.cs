@@ -1,5 +1,6 @@
 ﻿using DentalApp.Application.Features.Appointments.Queries;
 using DentalApp.Application.Features.Patients.Queries.GetAllPatients;
+using DentalApp.Domain.Enums;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -14,8 +15,8 @@ namespace DentalApp.Application.Features.Appointments.Queries
      Guid PatientId,
      string DoctorName,
      string PatientName,
-     DateTime Date,     
-     string Status,
+     DateTime Date,
+     AppointmentStatus Status,
      string? Notes
  );
     public record GetAllAppointmentsResponse

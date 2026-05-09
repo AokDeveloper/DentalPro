@@ -1,73 +1,180 @@
 <div class="grid">
     <div class="col-12">
-        <div class="card">
-            <h5>Randevu Listesi</h5>
+        <div class="card p-0 border-none"> 
             
-            <p-table 
-                #dt 
-                [value]="appointments" 
-                [rows]="10" 
-                [loading]="loading" 
-                [paginator]="true" 
-                [globalFilterFields]="['patientName','description']" 
-                responsiveLayout="scroll"
-                [rowHover]="true"
-                dataKey="id"
-                [showCurrentPageReport]="true">
+            <p-tabView styleClass="tabview-custom">
+                
+                <!-- SEKME 1: BUGÜNÜN RANDEVULARI -->
+                <p-tabPanel>
+                    <ng-template pTemplate="header">
+                        <i class="pi pi-calendar mr-2"></i><span class="font-bold">Bugün</span>
+                        <p-tag [value]="todayAppointments.length.toString()" severity="info" class="ml-2" [rounded]="true"></p-tag>
+                    </ng-template>
 
-                <ng-template pTemplate="caption">
-                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-                        <span class="block mt-2 md:mt-0 p-input-icon-left">
-                            <i class="pi pi-search"></i>
-                            <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')" placeholder="Hasta Ara..." />
-                        </span>
-                        <button pButton pRipple label="Yeni Randevu" icon="pi pi-plus" class="p-button-primary mr-2" routerLink="/appointments/create"></button>
-                    </div>
-                </ng-template>
-
-                <ng-template pTemplate="header">
-                    <tr>
-                        <th pSortableColumn="date">Tarih / Saat <p-sortIcon field="date"></p-sortIcon></th>
-                        <th pSortableColumn="patientName">Hasta Adı <p-sortIcon field="patientName"></p-sortIcon></th>
-                        <th>Açıklama</th>
-                        <th>Durum</th>
-                        <th>İşlemler</th>
-                    </tr>
-                </ng-template>
-
-                <ng-template pTemplate="body" let-appointment>
-                    <tr>
-                        <td>
-                            <span class="p-column-title">Tarih</span>
-                            {{ appointment.date | date:'dd.MM.yyyy HH:mm' }}
-                        </td>
-                        <td>
-                            <span class="p-column-title">Hasta</span>
-                            {{ appointment.patientName || 'Belirtilmemiş' }}
-                        </td>
-                        <td>
-                            <span class="p-column-title">Açıklama</span>
-                            {{ appointment.notes }}
-                        </td>
-                        <td>
-                            <span class="p-column-title">Durum</span>
-                            <p-tag [value]="appointment.status || 'Bekliyor'" [severity]="getSeverity(appointment.status)"></p-tag>
-                        </td>
-                        <td>
-                            <div class="flex">
-                                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"></button>
-                                <button pButton pRipple icon="pi pi-check" class="p-button-rounded p-button-info" title="Tamamla"></button>
+                    <p-table #dt1 [value]="todayAppointments" [rows]="10" [loading]="loading" [paginator]="true" [globalFilterFields]="['patientName','description']" responsiveLayout="scroll" [rowHover]="true" dataKey="id">
+                        <ng-template pTemplate="caption">
+                            <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                                <span class="block mt-2 md:mt-0 p-input-icon-left">
+                                    <i class="pi pi-search"></i><input pInputText type="text" (input)="dt1.filterGlobal($any($event.target).value, 'contains')" placeholder="Bugünün hastalarında ara..." />
+                                </span>
+                                <button pButton pRipple label="Yeni Randevu" icon="pi pi-plus" class="p-button-primary mr-2" routerLink="/appointments/create"></button>
                             </div>
-                        </td>
-                    </tr>
-                </ng-template>
+                        </ng-template>
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th pSortableColumn="date">Saat <p-sortIcon field="date"></p-sortIcon></th>
+                                <th pSortableColumn="patientName">Hasta Adı <p-sortIcon field="patientName"></p-sortIcon></th>
+                                <th>Açıklama</th>
+                                <th>Durum</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-appointment>
+                            <tr>
+                                <td class="font-bold text-primary">{{ appointment.date | date:'HH:mm' }}</td>
+                                <td>{{ appointment.patientName || 'Belirtilmemiş' }}</td>
+                                <td>{{ appointment.notes }}</td>
+                                <!-- 🌟 Durum Etiketi Güncellendi -->
+                                <td><p-tag [value]="getStatusLabel(appointment.status || 'Pending')" [severity]="getSeverity(appointment.status || 'Pending')"></p-tag></td>
+                                <td>
+                                    <div class="flex">
+                                        <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"></button>
+                                        <!-- 🌟 Durum Güncelleme Butonu -->
+                                        <button pButton pRipple icon="pi pi-sync" class="p-button-rounded p-button-info" pTooltip="Durumu Güncelle" (click)="openStatusDialog(appointment)"></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage">
+                            <tr><td colspan="5" class="text-center p-4">Bugün için planlanmış bir randevu yok.</td></tr>
+                        </ng-template>
+                    </p-table>
+                </p-tabPanel>
 
-                <ng-template pTemplate="emptymessage">
-                    <tr>
-                        <td colspan="5" class="text-center p-4">Henüz planlanmış bir randevu yok.</td>
-                    </tr>
-                </ng-template>
-            </p-table>
+                <!-- SEKME 2: BU HAFTA -->
+                <p-tabPanel>
+                    <ng-template pTemplate="header">
+                        <i class="pi pi-calendar-plus mr-2"></i><span class="font-bold">Bu Hafta</span>
+                        <p-tag [value]="weeklyAppointments.length.toString()" severity="warning" class="ml-2" [rounded]="true"></p-tag>
+                    </ng-template>
+
+                    <p-table #dt2 [value]="weeklyAppointments" [rows]="10" [loading]="loading" [paginator]="true" [globalFilterFields]="['patientName','description']" responsiveLayout="scroll" [rowHover]="true" dataKey="id">
+                        <ng-template pTemplate="caption">
+                            <div class="flex justify-content-between align-items-center">
+                                <span class="p-input-icon-left"><i class="pi pi-search"></i><input pInputText type="text" (input)="dt2.filterGlobal($any($event.target).value, 'contains')" placeholder="Haftalık ara..." /></span>
+                                <button pButton label="Yeni Randevu" icon="pi pi-plus" class="p-button-primary mr-2" routerLink="/appointments/create"></button>
+                            </div>
+                        </ng-template>
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th pSortableColumn="date">Tarih / Saat <p-sortIcon field="date"></p-sortIcon></th>
+                                <th pSortableColumn="patientName">Hasta Adı <p-sortIcon field="patientName"></p-sortIcon></th>
+                                <th>Durum</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-appointment>
+                            <tr>
+                                <td>{{ appointment.date | date:'dd.MM.yyyy - HH:mm' }}</td>
+                                <td>{{ appointment.patientName || 'Belirtilmemiş' }}</td>
+                                <td><p-tag [value]="getStatusLabel(appointment.status || 'Pending')" [severity]="getSeverity(appointment.status || 'Pending')"></p-tag></td>
+                                <td>
+                                    <button pButton pRipple icon="pi pi-sync" class="p-button-rounded p-button-text p-button-info" pTooltip="Durumu Güncelle" (click)="openStatusDialog(appointment)"></button>
+                                </td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage">
+                            <tr><td colspan="4" class="text-center p-4">Bu hafta için planlanmış bir randevu yok.</td></tr>
+                        </ng-template>
+                    </p-table>
+                </p-tabPanel>
+
+                <!-- SEKME 3: TÜM RANDEVULAR -->
+                <p-tabPanel>
+                    <ng-template pTemplate="header">
+                        <i class="pi pi-list mr-2"></i><span class="font-bold">Tüm Randevular</span>
+                    </ng-template>
+
+                    <p-table #dt3 [value]="appointments" [rows]="10" [loading]="loading" [paginator]="true" [globalFilterFields]="['patientName','description']" responsiveLayout="scroll" [rowHover]="true" dataKey="id">
+                        <ng-template pTemplate="caption">
+                            <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                                <span class="block mt-2 md:mt-0 p-input-icon-left">
+                                    <i class="pi pi-search"></i><input pInputText type="text" (input)="dt3.filterGlobal($any($event.target).value, 'contains')" placeholder="Hasta Ara..." />
+                                </span>
+                                <button pButton pRipple label="Yeni Randevu" icon="pi pi-plus" class="p-button-primary mr-2" routerLink="/appointments/create"></button>
+                            </div>
+                        </ng-template>
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th pSortableColumn="date">Tarih / Saat <p-sortIcon field="date"></p-sortIcon></th>
+                                <th pSortableColumn="patientName">Hasta Adı <p-sortIcon field="patientName"></p-sortIcon></th>
+                                <th>Açıklama</th>
+                                <th>Durum</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-appointment>
+                            <tr>
+                                <td>{{ appointment.date | date:'dd.MM.yyyy HH:mm' }}</td>
+                                <td>{{ appointment.patientName || 'Belirtilmemiş' }}</td>
+                                <td>{{ appointment.notes }}</td>
+                                <td><p-tag [value]="getStatusLabel(appointment.status || 'Pending')" [severity]="getSeverity(appointment.status || 'Pending')"></p-tag></td>
+                                <td>
+                                    <div class="flex">
+                                        <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"></button>
+                                        <button pButton pRipple icon="pi pi-sync" class="p-button-rounded p-button-info" pTooltip="Durumu Güncelle" (click)="openStatusDialog(appointment)"></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage">
+                            <tr><td colspan="5" class="text-center p-4">Henüz planlanmış bir randevu yok.</td></tr>
+                        </ng-template>
+                    </p-table>
+                </p-tabPanel>
+
+            </p-tabView>
         </div>
     </div>
 </div>
+
+<!-- 🌟 YENİ EKLENEN: DURUM GÜNCELLEME DİALOG PENCERESİ -->
+<p-dialog 
+    header="Randevu Durumunu Güncelle" 
+    [(visible)]="statusDialogVisible" 
+    [modal]="true" 
+    [style]="{width: '400px'}"
+    [draggable]="false"
+    [resizable]="false">
+    
+    <div class="flex flex-column gap-3 mt-3">
+        <label class="font-bold text-600">Yeni Durumu Seçiniz:</label>
+        <p-dropdown 
+            [options]="statusOptions" 
+            [(ngModel)]="newStatus" 
+            optionLabel="label" 
+            optionValue="value" 
+            styleClass="w-full" 
+            appendTo="body">
+        </p-dropdown>
+
+        <!-- 🌟 YENİ: Sadece Tamamlandı (2) veya İptal (3) seçilirse Not alanı açılsın -->
+        <ng-container *ngIf="newStatus === 2 || newStatus === 3 || newStatus === 4">
+            <label class="font-bold text-600 mt-2">
+                {{ newStatus === 2 ? 'Tedavi Notları:' : (newStatus === 3 ? 'İptal Sebebi:' : 'Gelmeme Sebebi:') }}
+                </label>
+            <textarea 
+                pInputTextarea 
+                [(ngModel)]="appointmentNote" 
+                rows="3" 
+                class="w-full" 
+                placeholder="Lütfen bu işlem için bir not giriniz..."></textarea>
+        </ng-container>
+
+    </div>
+    
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="İptal" icon="pi pi-times" class="p-button-text p-button-secondary" (click)="statusDialogVisible = false"></button>
+        <button pButton pRipple label="Kaydet" icon="pi pi-check" class="p-button-success" (click)="saveStatus()"></button>
+    </ng-template>
+</p-dialog>

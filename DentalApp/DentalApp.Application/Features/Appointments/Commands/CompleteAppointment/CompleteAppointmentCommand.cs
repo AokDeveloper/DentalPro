@@ -28,6 +28,7 @@ namespace DentalApp.Application.Features.Appointments.Commands.CompleteAppointme
             {
                 throw new Exception("Randevu Bulunamadı");
             }
+            
             appointment.Complete(request.Notes);
             await _context.SaveChangesAsync(cancellationToken);
         }

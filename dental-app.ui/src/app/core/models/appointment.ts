@@ -4,7 +4,7 @@ export interface Appointment {
     patientName: string; // Listede göstermek için (Backend'den gelmeli veya join yapılmalı)
     date: string; // Backend genelde string tarih döner
     notes?: string;    // Yapılacak işlem notu
-    status?: string;         // 'Onaylandı', 'Tamamlandı' vb. 
+    status?: number;         // 'Onaylandı', 'Tamamlandı' vb. 
    
 }
 

@@ -15,7 +15,7 @@ namespace DentalApp.WebApi.Endpoints.Appointments
         }
         public override void Configure()
         {
-            Put("/api/appointment/{id}/complete");
+            Put("/api/appointments/{id}/complete");
             AllowAnonymous();
             Summary(s =>
             {

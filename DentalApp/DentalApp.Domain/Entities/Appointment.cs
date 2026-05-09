@@ -62,5 +62,16 @@ namespace DentalApp.Domain.Entities
             Notes = notes;
             
         }
+        public void DidntCome(string notes)
+        {
+            if (Status == AppointmentStatus.Iptal )
+                throw new InvalidActionException("İptal edilmiş randevu gelmedi olarak seçilemez.");
+            //if (Status == AppointmentStatus.Tamamlandı)
+            //    throw new InvalidActionException("Tamamlanmış randevu gelmedi olarak seçilemez.");
+            Status = AppointmentStatus.Gelmedi;
+            if (!string.IsNullOrEmpty(notes))
+                Notes = notes;
+
+        }
     }
 }
