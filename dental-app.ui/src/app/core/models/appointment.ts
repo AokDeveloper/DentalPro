@@ -5,6 +5,7 @@ export interface Appointment {
     date: string; // Backend genelde string tarih döner
     notes?: string;    // Yapılacak işlem notu
     status?: number;         // 'Onaylandı', 'Tamamlandı' vb. 
+    completionNotes?: string;
    
 }
 

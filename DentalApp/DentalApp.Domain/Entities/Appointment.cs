@@ -16,7 +16,8 @@ namespace DentalApp.Domain.Entities
         public AppointmentStatus Status { get; private set; }
         public string Notes { get; private set; }
         public Guid DoctorId { get; set; } // Foreign Key
-       
+        public string CompletionNotes { get; private set; }
+
 
 
         // EF Core için Navigation Property
@@ -42,13 +43,13 @@ namespace DentalApp.Domain.Entities
             DoctorId = doctorId;
         }
         // Randevu İptal Mantığı
-        public void Cancel(string reason)
+        public void Cancel(string notes)
         {
             if (Status == AppointmentStatus.Tamamlandı /*|| Status == AppointmentStatus.Cancelled*/)
                 throw new InvalidActionException("Tamamlanmış randevu iptal edilemez.");
 
             Status = AppointmentStatus.Iptal;
-            Notes = reason; //iptal nedeni
+            CompletionNotes = notes; //iptal nedeni
             
         }
 
@@ -59,7 +60,7 @@ namespace DentalApp.Domain.Entities
                 throw new InvalidActionException("İptal edilmiş randevu tamamlanamaz.");
             Status = AppointmentStatus.Tamamlandı;
             if(!string.IsNullOrEmpty(notes))
-            Notes = notes;
+                CompletionNotes = notes;
             
         }
         public void DidntCome(string notes)
@@ -70,7 +71,7 @@ namespace DentalApp.Domain.Entities
             //    throw new InvalidActionException("Tamamlanmış randevu gelmedi olarak seçilemez.");
             Status = AppointmentStatus.Gelmedi;
             if (!string.IsNullOrEmpty(notes))
-                Notes = notes;
+                CompletionNotes = notes;
 
         }
     }

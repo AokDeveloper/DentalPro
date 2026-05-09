@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DentalApp.Application.Features.Appointments.Commands.CancelAppointment
 {
-       public record CancelAppointmentCommand(Guid Id, string Reason):IRequest;
+       public record CancelAppointmentCommand(Guid Id, string CompletionNotes) :IRequest;
 
     public class CancelAppointmentCommandHandler : IRequestHandler<CancelAppointmentCommand>
     {
@@ -28,7 +28,7 @@ namespace DentalApp.Application.Features.Appointments.Commands.CancelAppointment
                 throw new Exception("Randevu bulunamadı");
             }
             
-            appointment.Cancel(request.Reason);
+            appointment.Cancel(request.CompletionNotes);
             await _context.SaveChangesAsync(cancellationToken);
         }
     }

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace DentalApp.Application.Features.Appointments.Commands.DidntComeAppointment
 {
 
-    public record DidntComeAppointmentCommand(Guid Id, string Notes) : IRequest;
+    public record DidntComeAppointmentCommand(Guid Id, string CompletionNotes) : IRequest;
 
     public class DidntComeAppointmentCommandHandler : IRequestHandler<DidntComeAppointmentCommand>
     {
@@ -29,7 +29,7 @@ namespace DentalApp.Application.Features.Appointments.Commands.DidntComeAppointm
                 throw new Exception("Randevu bulunamadı");
             }
 
-            appointment.DidntCome(request.Notes);
+            appointment.DidntCome(request.CompletionNotes);
             await _context.SaveChangesAsync(cancellationToken);
         }
     }

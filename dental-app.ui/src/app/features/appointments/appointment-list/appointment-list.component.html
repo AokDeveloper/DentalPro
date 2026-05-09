@@ -22,10 +22,11 @@
                         </ng-template>
                         <ng-template pTemplate="header">
                             <tr>
-                                <th pSortableColumn="date">Saat <p-sortIcon field="date"></p-sortIcon></th>
+                                <th pSortableColumn="date">Tarih / Saat <p-sortIcon field="date"></p-sortIcon></th>
                                 <th pSortableColumn="patientName">Hasta Adı <p-sortIcon field="patientName"></p-sortIcon></th>
                                 <th>Açıklama</th>
                                 <th>Durum</th>
+                                <th>Tamamlanma Notu</th>
                                 <th>İşlemler</th>
                             </tr>
                         </ng-template>
@@ -33,9 +34,11 @@
                             <tr>
                                 <td class="font-bold text-primary">{{ appointment.date | date:'HH:mm' }}</td>
                                 <td>{{ appointment.patientName || 'Belirtilmemiş' }}</td>
-                                <td>{{ appointment.notes }}</td>
+                                <td style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" [title]="appointment.notes"> {{ appointment.notes }} </td>
                                 <!-- 🌟 Durum Etiketi Güncellendi -->
                                 <td><p-tag [value]="getStatusLabel(appointment.status || 'Pending')" [severity]="getSeverity(appointment.status || 'Pending')"></p-tag></td>
+                                <td style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" [title]="appointment.completionNotes"> {{ appointment.completionNotes }} </td>                                   
+                               
                                 <td>
                                     <div class="flex">
                                         <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"></button>
@@ -69,7 +72,9 @@
                             <tr>
                                 <th pSortableColumn="date">Tarih / Saat <p-sortIcon field="date"></p-sortIcon></th>
                                 <th pSortableColumn="patientName">Hasta Adı <p-sortIcon field="patientName"></p-sortIcon></th>
+                                <th>Açıklama</th>
                                 <th>Durum</th>
+                                <th>Tamamlama Notu</th>
                                 <th>İşlemler</th>
                             </tr>
                         </ng-template>
@@ -77,10 +82,13 @@
                             <tr>
                                 <td>{{ appointment.date | date:'dd.MM.yyyy - HH:mm' }}</td>
                                 <td>{{ appointment.patientName || 'Belirtilmemiş' }}</td>
+                                <td style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" [title]="appointment.notes"> {{ appointment.notes }} </td>
                                 <td><p-tag [value]="getStatusLabel(appointment.status || 'Pending')" [severity]="getSeverity(appointment.status || 'Pending')"></p-tag></td>
+                                <td style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" [title]="appointment.completionNotes"> {{ appointment.completionNotes }} </td>
                                 <td>
                                     <button pButton pRipple icon="pi pi-sync" class="p-button-rounded p-button-text p-button-info" pTooltip="Durumu Güncelle" (click)="openStatusDialog(appointment)"></button>
                                 </td>
+
                             </tr>
                         </ng-template>
                         <ng-template pTemplate="emptymessage">
@@ -110,6 +118,7 @@
                                 <th pSortableColumn="patientName">Hasta Adı <p-sortIcon field="patientName"></p-sortIcon></th>
                                 <th>Açıklama</th>
                                 <th>Durum</th>
+                                <th>Tamamlama Notu</th>
                                 <th>İşlemler</th>
                             </tr>
                         </ng-template>
@@ -117,13 +126,25 @@
                             <tr>
                                 <td>{{ appointment.date | date:'dd.MM.yyyy HH:mm' }}</td>
                                 <td>{{ appointment.patientName || 'Belirtilmemiş' }}</td>
-                                <td>{{ appointment.notes }}</td>
+                                <td style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" [title]="appointment.notes"> {{ appointment.notes }} </td>
                                 <td><p-tag [value]="getStatusLabel(appointment.status || 'Pending')" [severity]="getSeverity(appointment.status || 'Pending')"></p-tag></td>
+                                <td style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" [title]="appointment.completionNotes"> {{ appointment.completionNotes }} </td>
+                             
                                 <td>
-                                    <div class="flex">
-                                        <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"></button>
-                                        <button pButton pRipple icon="pi pi-sync" class="p-button-rounded p-button-info" pTooltip="Durumu Güncelle" (click)="openStatusDialog(appointment)"></button>
-                                    </div>
+                                <div class="flex">
+                                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"></button>
+
+                                    <button pButton pRipple icon="pi pi-sync" class="p-button-rounded p-button-info mr-2" pTooltip="Durumu Güncelle" (click)="openStatusDialog(appointment)"></button>
+
+                                    <button 
+                                        pButton 
+                                        pRipple 
+                                        icon="pi pi-eye" 
+                                        class="p-button-rounded p-button-warning" 
+                                        (click)="openDetailsDialog(appointment)" 
+                                        pTooltip="Detayları Gör">
+                                    </button>
+                                </div>
                                 </td>
                             </tr>
                         </ng-template>
@@ -176,5 +197,42 @@
     <ng-template pTemplate="footer">
         <button pButton pRipple label="İptal" icon="pi pi-times" class="p-button-text p-button-secondary" (click)="statusDialogVisible = false"></button>
         <button pButton pRipple label="Kaydet" icon="pi pi-check" class="p-button-success" (click)="saveStatus()"></button>
+    </ng-template>
+</p-dialog>
+
+<p-dialog 
+    header="Randevu Detayları" 
+    [(visible)]="detailsDialogVisible" 
+    [modal]="true" 
+    [style]="{width: '450px'}" 
+    [draggable]="false" 
+    [resizable]="false">
+    
+    <div class="flex flex-column gap-3 mt-3" *ngIf="viewingAppointment">
+        
+        <!-- İLK AÇIKLAMA ALANI -->
+        <div class="field">
+            <label class="font-bold text-600">Randevu Açıklaması:</label>
+            <div class="p-3 border-round surface-100 mt-1" style="min-height: 4rem; white-space: pre-wrap; word-break: break-word;">
+                {{ viewingAppointment.notes || 'Bu randevu için bir açıklama girilmemiş.' }}
+            </div>
+        </div>
+
+        <!-- DURUM NOTU ALANI (Sadece iptal, tamamlandı veya gelmedi ise görünür) -->
+        <div class="field" *ngIf="viewingAppointment.status === 2 || viewingAppointment.status === 3 || viewingAppointment.status === 4">
+            <label class="font-bold text-600">
+                {{ viewingAppointment.status === 2 ? 'Tedavi Notları:' : (viewingAppointment.status === 3 ? 'İptal Sebebi:' : 'Gelmeme Sebebi:') }}
+            </label>
+            <div class="p-3 border-round surface-100 mt-1" style="min-height: 4rem; white-space: pre-wrap; word-break: break-word;">
+             
+                {{ viewingAppointment.completionNotes || 'Durum için bir not girilmemiş.' }}
+                
+            </div>
+        </div>
+
+    </div>
+    
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Kapat" icon="pi pi-times" class="p-button-text p-button-secondary" (click)="detailsDialogVisible = false"></button>
     </ng-template>
 </p-dialog>

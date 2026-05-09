@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -11,7 +10,7 @@ import { TagModule } from 'primeng/tag';
 import { TabViewModule } from 'primeng/tabview';
 import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
-
+import { Observable } from 'rxjs';
 import { AppointmentService } from '../services/appointment.service';
 import { Appointment } from '../../../core/models/appointment';
 
@@ -33,6 +32,8 @@ export class AppointmentListComponent implements OnInit {
   selectedAppointment: Appointment | null = null;
   newStatus: number = 1; 
   appointmentNote: string = '';
+  detailsDialogVisible: boolean = false;
+  viewingAppointment: Appointment | null = null;
 
   // C# Enum değerlerinizle (1, 2, 3, 4) BİREBİR aynı liste
   statusOptions = [
@@ -79,6 +80,11 @@ export class AppointmentListComponent implements OnInit {
     });
   }
 
+openDetailsDialog(appointment: Appointment) {
+    this.viewingAppointment = appointment;
+    this.detailsDialogVisible = true;
+  }
+
 openStatusDialog(appointment: Appointment) {
     this.selectedAppointment = appointment;
     this.newStatus = appointment.status ? Number(appointment.status) : 1; 
@@ -91,47 +97,38 @@ saveStatus() {
     if (!this.selectedAppointment || !this.newStatus) return;
 
     const appointmentId = this.selectedAppointment.id;
+    
+    // 🌟 1. Ortak Payload (Artık hepsi 'notes' beklediği için tek sefer tanımlıyoruz)
+    const payload = { 
+        id: appointmentId, 
+        completionNotes: this.appointmentNote 
+    };
 
-    // 🌟 DURUM: İPTAL (3)
-    if (this.newStatus === 3) {
-      
-      // Backend CancelAppointmentCommand modeline uygun paket (reason)
-      const cancelPayload = { 
-          id: appointmentId,
-          reason: this.appointmentNote // 'notes' yerine 'reason' olarak gönderiyoruz
-      };
+    // 🌟 2. İsteği tutacak boş bir Observable tanımlıyoruz
+    let request$: Observable<any>;
 
-      this.appointmentService.cancelAppointment(appointmentId, cancelPayload).subscribe({
-        next: () => this.onStatusUpdateSuccess(),
-        error: (err) => console.error('İptal işlemi başarısız:', err)
-      });
-    } 
-    // 🌟 DURUM: TAMAMLANDI (2)
-    else if (this.newStatus === 2) {
-          
-      const completePayload = { 
-          id: appointmentId,
-          notes: this.appointmentNote 
-      };   
-
-      this.appointmentService.completeAppointment(appointmentId, completePayload).subscribe({
-        next: () => this.onStatusUpdateSuccess(),
-        error: (err) => console.error('Tamamlama işlemi başarısız:', err)
-      });
-    } 
-
-   else if (this.newStatus === 4) {
-
-      const completePayload = { 
-          id: appointmentId,
-          notes: this.appointmentNote 
-      };   
-      this.appointmentService.didntcomeAppointment(appointmentId, completePayload).subscribe({
-        next: () => this.onStatusUpdateSuccess(),
-        error: (err) => console.error('Gelmedi işlemi başarısız:', err)
-      });
+    // 🌟 3. Duruma göre hangi servisin çağrılacağını eşleştiriyoruz
+    switch (this.newStatus) {
+      case 2: // Tamamlandı
+        request$ = this.appointmentService.completeAppointment(appointmentId, payload);
+        break;
+      case 3: // İptal Edildi
+        request$ = this.appointmentService.cancelAppointment(appointmentId, payload);
+        break;
+      case 4: // Gelmedi
+        request$ = this.appointmentService.didntcomeAppointment(appointmentId, payload);
+        break;
+     
     }
-      
+
+    // 🌟 4. Sadece TEK BİR KERE subscribe oluyoruz!
+    request$.subscribe({
+      next: () => this.onStatusUpdateSuccess(),
+      error: (err) => {
+        console.error('Durum güncellenirken hata oluştu:', err);
+        alert('Durum güncellenirken hata oluştu.');
+      }
+    });
   }
 
   
@@ -140,11 +137,6 @@ saveStatus() {
     // Ekranda durumu güncelle
     this.selectedAppointment!.status = this.newStatus;
     
-    // Eğer tabloya yansımasını istiyorsanız notu da güncelleyebilirsiniz
-    if(this.appointmentNote) {
-       this.selectedAppointment!.notes = this.appointmentNote;
-    }
-
     this.statusDialogVisible = false;
   }
   getSeverity(status: number | string): "success" | "info" | "warning" | "danger" | "secondary" {

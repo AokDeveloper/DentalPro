@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace DentalApp.Application.Features.Appointments.Commands.CompleteAppointment
 {
   
-    public record CompleteAppointmentCommand(Guid Id, string? Notes) : IRequest;
+    public record CompleteAppointmentCommand(Guid Id, string? CompletionNotes) : IRequest;
 
     public class CompleteAppointmentCommandHandler : IRequestHandler<CompleteAppointmentCommand>
     {
@@ -29,7 +29,7 @@ namespace DentalApp.Application.Features.Appointments.Commands.CompleteAppointme
                 throw new Exception("Randevu Bulunamadı");
             }
             
-            appointment.Complete(request.Notes);
+            appointment.Complete(request.CompletionNotes);
             await _context.SaveChangesAsync(cancellationToken);
         }
     }
