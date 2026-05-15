@@ -7,7 +7,7 @@
 
             <div class="field mt-4">
                 <label>Hasta Seçin</label>
-               <p-dropdown 
+                <p-dropdown 
                     [options]="patients" 
                     [(ngModel)]="appointmentModel.patientId" 
                     optionLabel="fullName" 
@@ -21,7 +21,7 @@
 
             <div class="field">
                 <label>Randevu Günü</label>
-               <p-calendar 
+                <p-calendar 
                     [(ngModel)]="selectedDate" 
                     [showIcon]="true" 
                     (onSelect)="onDateSelect($event)" 
@@ -43,7 +43,8 @@
                                 [disabled]="slot.isBooked"
                                 [ngClass]="{
                                     'p-button-danger': slot.isBooked, 
-                                    'p-button-outlined': !slot.isBooked && selectedTime !== slot.time
+                                    'p-button-outlined': !slot.isBooked && !selectedTimes.includes(slot.time),
+                                    'p-button-primary': selectedTimes.includes(slot.time)
                                 }">
                         </button>
                     </div>
@@ -51,7 +52,7 @@
 
                 <small class="block mt-2 text-500">
                     <i class="pi pi-info-circle mr-1"></i> 
-                    Kırmızı alanlar doludur. Lütfen mavi veya beyaz saatlerden birini seçin.
+                    Kırmızı alanlar doludur. Uzun sürecek işlemler için <strong>birden fazla ardışık saat</strong> seçerek süreyi uzatabilirsiniz.
                 </small>
             </div>
 
@@ -61,7 +62,13 @@
             </div>
 
             <div class="flex justify-content-end mt-4">
-                <button pButton label="Randevuyu Kaydet" icon="pi pi-check" class="p-button-success w-auto" [loading]="loading" (click)="save()"></button>
+                <button pButton 
+                        [label]="selectedTimes.length > 1 ? selectedTimes.length * 30 + ' Dakikalık Randevuyu Kaydet' : 'Randevuyu Kaydet'" 
+                        icon="pi pi-check" 
+                        class="p-button-success w-auto" 
+                        [loading]="loading" 
+                        (click)="save()">
+                </button>
             </div>
         </div>
     </div>

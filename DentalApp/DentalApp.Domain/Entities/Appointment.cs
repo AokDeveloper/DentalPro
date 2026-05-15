@@ -13,10 +13,11 @@ namespace DentalApp.Domain.Entities
     {
         public Guid PatientId { get; private set; }
         public DateTime Date { get; private set; }
+        public int Duration { get; set; } = 30;
         public AppointmentStatus Status { get; private set; }
-        public string Notes { get; private set; }
+        public string? Notes { get; private set; }
         public Guid DoctorId { get; set; } // Foreign Key
-        public string CompletionNotes { get; private set; }
+        public string? CompletionNotes { get; private set; }
 
 
 

@@ -25,7 +25,7 @@ namespace DentalApp.Application.Features.Appointments.Queries
                 .AsNoTracking()
                 .Include(a => a.Patient) // ProjectToType mapper include yazmasak bile dto içinde patientname var diye otomatik algılar ve tabloyu joinler
                 .Include(a => a.Doctor)
-                .OrderByDescending(a => a.Date)
+                .OrderBy(a => a.Date)
                 .ProjectToType<AppointmentDto>()
                 .ToListAsync(cancellationToken);
             return new GetAllAppointmentsResponse { Appointments = appointments };
