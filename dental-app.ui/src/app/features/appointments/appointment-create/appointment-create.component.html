@@ -56,6 +56,14 @@
                 </small>
             </div>
 
+            <div class="field mt-4 flex align-items-center">
+                <p-inputSwitch [(ngModel)]="appointmentModel.isImportant" inputId="importantCheck"></p-inputSwitch>
+                <label for="importantCheck" class="ml-2 font-bold cursor-pointer transition-colors transition-duration-200" [ngClass]="appointmentModel.isImportant ? 'text-red-500' : 'text-600'">
+                    <i class="pi pi-exclamation-triangle mr-1" *ngIf="appointmentModel.isImportant"></i>
+                    Bu Önemli/Öncelikli Bir Randevudur
+                </label>
+            </div>
+
             <div class="field mt-4">
                 <label>Notlar (Opsiyonel)</label>
                 <textarea pInputTextarea [(ngModel)]="appointmentModel.notes" rows="3"></textarea>

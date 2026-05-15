@@ -9,7 +9,7 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
 import { MessageService, PrimeNGConfig } from 'primeng/api';
-
+import { InputSwitchModule } from 'primeng/inputswitch';
 import { AppointmentService } from '../services/appointment.service';
 import { PatientService } from '../../patients/services/patient.service';
 import { AuthService } from '../../../core/auth/auth.service';
@@ -17,7 +17,7 @@ import { AuthService } from '../../../core/auth/auth.service';
 @Component({
   selector: 'app-appointment-create',
   standalone: true,
-  imports: [CommonModule, FormsModule, DropdownModule, CalendarModule, InputTextareaModule, ButtonModule, ToastModule],
+  imports: [CommonModule, FormsModule, DropdownModule, CalendarModule, InputTextareaModule, ButtonModule, ToastModule,InputSwitchModule],
   providers: [MessageService],
   templateUrl: './appointment-create.component.html'
 })
@@ -25,7 +25,8 @@ export class AppointmentCreateComponent implements OnInit {
 
   appointmentModel: any = {
     patientId: null,
-    notes: ''
+    notes: '',
+    isImportant: false
   };
 
   patients: any[] = [];
@@ -175,7 +176,8 @@ export class AppointmentCreateComponent implements OnInit {
       date: localDateTimeString,
       duration: calculatedDuration, // Backend'deki yeni alana süreyi yolladık
       notes: this.appointmentModel.notes,
-      doctorId: currentDoctorId 
+      doctorId: currentDoctorId,
+      isImportant: this.appointmentModel.isImportant
     };
 
     this.appointmentService.add(payload).subscribe({

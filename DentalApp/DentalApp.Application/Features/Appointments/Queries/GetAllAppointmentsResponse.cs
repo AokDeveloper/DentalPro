@@ -18,7 +18,10 @@ namespace DentalApp.Application.Features.Appointments.Queries
      DateTime Date,
      AppointmentStatus Status,   
      string? Notes,
-     string? CompletionNotes
+     string? CompletionNotes,
+     int Duration,
+     bool IsImportant
+
  );
     public record GetAllAppointmentsResponse
     {

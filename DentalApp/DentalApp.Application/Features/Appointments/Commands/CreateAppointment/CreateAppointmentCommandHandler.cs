@@ -29,7 +29,9 @@ namespace DentalApp.Application.Features.Appointments.Commands.CreateAppointment
                 request.PatientId,
                 request.Date,
                 request.Notes,
-                request.DoctorId
+                request.DoctorId,
+                request.Duration,
+                request.IsImportant
                 );
             _context.Appointments.Add( entity );
             await _context.SaveChangesAsync(cancellationToken);

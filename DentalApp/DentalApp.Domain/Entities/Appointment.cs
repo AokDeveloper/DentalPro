@@ -18,6 +18,9 @@ namespace DentalApp.Domain.Entities
         public string? Notes { get; private set; }
         public Guid DoctorId { get; set; } // Foreign Key
         public string? CompletionNotes { get; private set; }
+        public bool IsImportant { get; set; } = false;
+
+
 
 
 
@@ -33,7 +36,7 @@ namespace DentalApp.Domain.Entities
         }
 
 
-        public Appointment(Guid patientId, DateTime date, string? notes, Guid doctorId)
+        public Appointment(Guid patientId, DateTime date, string? notes, Guid doctorId, int duration, bool isImportant)
         {
             if (date < DateTime.UtcNow) throw new ArgumentException("Geçmişe randevu verilemez.");
 
@@ -42,6 +45,9 @@ namespace DentalApp.Domain.Entities
             Notes = notes;
             Status = AppointmentStatus.Planlandı;
             DoctorId = doctorId;
+            Duration = duration;
+            IsImportant = isImportant;
+
         }
         // Randevu İptal Mantığı
         public void Cancel(string notes)

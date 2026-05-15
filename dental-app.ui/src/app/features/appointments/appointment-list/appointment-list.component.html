@@ -1,20 +1,27 @@
+<style>
+    @keyframes blink {
+        0% { opacity: 1; }
+        50% { opacity: 0.2; }
+        100% { opacity: 1; }
+    }
+    .blinking-icon {
+        animation: blink 1.2s ease-in-out infinite;
+    }
+</style>
+
 <div class="grid">
     <div class="col-12">
         <div class="card p-0 border-none"> 
             
             <p-tabView styleClass="tabview-custom">
                 
-              <!-- 🌟 SEKME 1: BUGÜN (ZAMAN ÇİZELGESİ VE TABLO GEÇİŞLİ) -->
-                <p-tabPanel>
+              <p-tabPanel>
                     <ng-template pTemplate="header">
                         <i class="pi pi-calendar mr-2"></i><span class="font-bold">Bugün</span>
                         <p-tag [value]="todayAppointments.length.toString()" severity="info" class="ml-2" [rounded]="true"></p-tag>
                     </ng-template>
 
-                    <!-- ÜST MENÜ: Sol'da Görünüm Anahtarı, Sağ'da Yeni Randevu ve Arama -->
                     <div class="flex flex-column md:flex-row justify-content-between align-items-center mb-4 mt-2 gap-3">
-                        
-                        <!-- Görünüm Anahtarı -->
                         <div class="flex align-items-center surface-100 border-round-3xl p-1 border-1 surface-border">
                              <button pButton pRipple 
                                 label="Tablo Görünümü" 
@@ -28,7 +35,6 @@
                                 [class]="isTodayTimelineView ? 'p-button-sm p-button-text p-button-secondary border-round-2xl font-bold bg-white shadow-1 text-900' : 'p-button-sm p-button-text p-button-secondary border-round-2xl font-semibold hover:surface-200 text-600'" 
                                 (click)="isTodayTimelineView = true">
                             </button>
-                           
                         </div>
 
                         <div class="flex gap-2 w-full md:w-auto">
@@ -40,15 +46,9 @@
                         </div>
                     </div>
 
-                    <!-- ========================================== -->
-                    <!-- 1. GÖRÜNÜM: ZAMAN ÇİZELGESİ (TİMELİNE - YENİ) -->
-                    <!-- ========================================== -->
                     <div class="px-2 py-4" *ngIf="isTodayTimelineView">
                         <div class="flex flex-column gap-0">
-                            
                             <div *ngFor="let slot of todayTimeline; let last = last" class="flex align-items-stretch">
-                                
-                                <!-- Sol Sütun: Saat ve Dikey Çizgi -->
                                 <div class="flex flex-column align-items-center w-5rem mr-3">
                                     <div class="font-bold text-lg" [ngClass]="slot.isPast && slot.appointments.length === 0 ? 'text-400' : 'text-primary'">
                                         {{ slot.timeLabel }}
@@ -56,10 +56,7 @@
                                     <div class="border-left-2 surface-border h-full mt-2" [ngClass]="{'border-transparent': last}" style="min-height: 2.5rem;"></div>
                                 </div>
 
-                                <!-- Sağ Sütun: Kart veya Boş Kutu -->
                                 <div class="flex-grow-1 pb-4">
-                                    
-                                    <!-- BOŞ SLOT KUTUSU -->
                                     <div *ngIf="slot.appointments.length === 0" 
                                          class="border-round border-2 border-dashed p-3 text-left transition-colors transition-duration-200"
                                          [ngClass]="slot.isPast ? 'border-200 surface-50 text-400 cursor-default' : 'border-300 text-500 hover:surface-hover cursor-pointer'"
@@ -69,33 +66,28 @@
                                         {{ slot.isPast ? 'Geçmiş Saat' : 'Boş Slot - Tıklayarak Randevu Ekle' }}
                                     </div>
 
-                                    <!-- DOLU SLOT (YATAY DETAY KARTI) -->
                                     <div class="flex flex-column gap-2" *ngIf="slot.appointments.length > 0">
                                         <div *ngFor="let app of slot.appointments" 
-                                             class="surface-card shadow-1 border-round p-3 border-left-3 flex flex-column lg:flex-row justify-content-between lg:align-items-center gap-3"
-                                             [ngClass]="getCardColor(app.status)">
+                                             class="border-round p-3 border-left-3 flex flex-column lg:flex-row justify-content-between lg:align-items-center gap-3 transition-duration-200"
+                                             [ngClass]="app.isImportant ? 'border-purple-500 bg-purple-50 text-purple-900 shadow-3' : getCardColor(app.status) + ' shadow-1'">
                                             
-                                            <!-- Kartın Sol Tarafı: Hasta Bilgisi ve Notlar -->
                                             <div class="flex flex-column gap-2 flex-grow-1 overflow-hidden">
                                                 <div class="flex align-items-center gap-3">
-                                                    <span class="font-bold text-xl text-900">{{ app.patientName || 'Belirtilmemiş' }}</span>
-                                                    <!-- 🌟 GÜNCELLEME: Kartın içinde süreyi gösteriyoruz -->
-                                                    <span *ngIf="app.duration > 30" class="text-sm text-500 font-italic">({{ app.duration }} dk)</span>
+                                                    <i *ngIf="app.isImportant" class="pi pi-exclamation-triangle text-red-500 text-xl blinking-icon" pTooltip="ÖNEMLİ RANDEVU" tooltipPosition="top"></i>
+                                                    <span class="font-bold text-xl" [ngClass]="app.isImportant ? 'text-purple-900' : 'text-900'">{{ app.patientName || 'Belirtilmemiş' }}</span>
+                                                    <span *ngIf="app.duration > 30" class="text-sm font-italic" [ngClass]="app.isImportant ? 'text-purple-600' : 'text-500'">({{ app.duration }} dk)</span>
                                                     <p-tag [value]="getStatusLabel(app.status)" [severity]="getSeverity(app.status)" [rounded]="true"></p-tag>
                                                 </div>
                                                 
-                                                <!-- Açıklama Notu (Sadece varsa görünür) -->
-                                                <div class="text-600 text-sm" *ngIf="app.notes" style="word-break: break-word;">
-                                                    <i class="pi pi-align-left mr-1 text-400"></i> {{ app.notes }}
+                                                <div class="text-sm" [ngClass]="app.isImportant ? 'text-purple-700' : 'text-600'" *ngIf="app.notes" style="word-break: break-word;">
+                                                    <i class="pi pi-align-left mr-1 opacity-70"></i> {{ app.notes }}
                                                 </div>
                                                 
-                                                <!-- Tamamlama/İptal Notu (Sadece varsa görünür) -->
-                                                <div class="text-500 text-sm font-italic" *ngIf="app.completionNotes" style="word-break: break-word;">
+                                                <div class="text-sm font-italic" [ngClass]="app.isImportant ? 'text-purple-600' : 'text-500'" *ngIf="app.completionNotes" style="word-break: break-word;">
                                                     <i class="pi pi-info-circle mr-1"></i> {{ app.completionNotes }}
                                                 </div>
                                             </div>
 
-                                            <!-- Kartın Sağ Tarafı: İşlem Butonları -->
                                             <div class="flex gap-2 flex-shrink-0 mt-2 lg:mt-0">
                                                 <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success" pTooltip="Düzenle"></button>
                                                 <button pButton pRipple icon="pi pi-sync" class="p-button-rounded p-button-info" pTooltip="Durumu Güncelle" (click)="openStatusDialog(app)"></button>
@@ -103,15 +95,11 @@
                                             </div>
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- ========================================== -->
-                    <!-- 2. GÖRÜNÜM: KLASİK TABLO (ESKİ HALİ) -->
-                    <!-- ========================================== -->
                     <div *ngIf="!isTodayTimelineView">
                         <p-table #dt1 [value]="todayAppointments" [rows]="10" [loading]="loading" [paginator]="true" [globalFilterFields]="['patientName','description']" responsiveLayout="scroll" [rowHover]="true" dataKey="id">
                             <ng-template pTemplate="header">
@@ -126,12 +114,14 @@
                             </ng-template>
                             <ng-template pTemplate="body" let-appointment>
                                 <tr>
-                                    <!-- 🌟 GÜNCELLEME: Tabloda saatin yanına süre eklendi -->
                                     <td class="font-bold text-primary">
                                         {{ appointment.date | date:'HH:mm' }}
                                         <span *ngIf="appointment.duration > 30" class="text-xs text-500 font-italic ml-1">(+{{ appointment.duration }}dk)</span>
                                     </td>
-                                    <td class="font-bold">{{ appointment.patientName || 'Belirtilmemiş' }}</td>
+                                    <td class="font-bold">
+                                        <i *ngIf="appointment.isImportant" class="pi pi-exclamation-triangle text-red-500 mr-2 blinking-icon" pTooltip="Önemli Randevu"></i>
+                                        <span [ngClass]="{'text-red-500': appointment.isImportant}">{{ appointment.patientName || 'Belirtilmemiş' }}</span>
+                                    </td>
                                     <td style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" [title]="appointment.notes"> {{ appointment.notes }} </td>
                                     <td><p-tag [value]="getStatusLabel(appointment.status || 'Pending')" [severity]="getSeverity(appointment.status || 'Pending')"></p-tag></td>
                                     <td style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" [title]="appointment.completionNotes"> {{ appointment.completionNotes }} </td>                                    
@@ -149,20 +139,15 @@
                             </ng-template>
                         </p-table>
                     </div>
-
                 </p-tabPanel>
 
-         <!-- SEKME 2: BU HAFTA (GÖRÜNÜM DEĞİŞTİRMELİ KANBAN BOARD) -->
                 <p-tabPanel>
                     <ng-template pTemplate="header">
                         <i class="pi pi-calendar-plus mr-2"></i><span class="font-bold">Bu Hafta</span>
                         <p-tag [value]="weeklyAppointments.length.toString()" severity="warning" class="ml-2" [rounded]="true"></p-tag>
                     </ng-template>
 
-                    <!-- 🌟 YENİ ÜST MENÜ TASARIMI: Sol'da şık anahtar, Sağ'da Yeni Randevu -->
                     <div class="flex flex-column md:flex-row justify-content-between align-items-center mb-4 mt-2 gap-3">
-                        
-                        <!-- MİNİMAL VE ŞIK GEÇİŞ ANAHTARI (Segmented Control) -->
                         <div class="flex align-items-center surface-100 border-round-3xl p-1 border-1 surface-border">
                             <button pButton pRipple 
                                 label="Sade" 
@@ -177,46 +162,38 @@
                                 (click)="isDetailedWeeklyView = true">
                             </button>
                         </div>
-
-                        <!-- Yeni Randevu Butonu -->
                         <button pButton pRipple label="Yeni Randevu" icon="pi pi-plus" class="p-button-primary" routerLink="/appointments/create"></button>
                     </div>
 
-                    <!-- ========================================== -->
-                    <!-- 1. GÖRÜNÜM: SADE (KOMPAKT) LİSTE (Varsayılan)-->
-                    <!-- ========================================== -->
                     <div class="grid m-0" *ngIf="!isDetailedWeeklyView">
                         <div class="col-12 md:col p-1" *ngFor="let day of compactWeeklyAgenda">
                             <div class="surface-card shadow-1 border-round h-full p-2">
-                                
                                 <div class="text-center font-bold border-bottom-1 surface-border pb-2 mb-2">
                                     <div class="text-700">{{ day.dayName }}</div>
                                     <div class="text-500 text-sm font-normal">{{ day.date | date:'dd.MM.yyyy' }}</div>
                                 </div>
-                
                                 <div *ngIf="day.appointments.length === 0" class="text-center text-400 text-sm py-4">Boş</div>
-                
                                 <div class="flex flex-column gap-2">
                                     <div *ngFor="let app of day.appointments" 
-                                         class="border-left-3 border-round p-2 cursor-pointer hover:shadow-2 transition-duration-200"
-                                         [ngClass]="getCardColor(app.status)"
+                                         class="border-left-3 border-round p-2 cursor-pointer transition-duration-200 hover:shadow-4"
+                                         [ngClass]="app.isImportant ? 'border-purple-500 bg-purple-50 text-purple-900 shadow-3' : getCardColor(app.status)"
                                          (click)="openDetailsDialog(app)"
                                          pTooltip="Detayları görmek için tıklayın">
                                         
                                         <div class="flex justify-content-between align-items-center mb-1">
                                             <span class="font-bold text-sm">
                                                 <i class="pi pi-clock mr-1" style="font-size: 0.8rem"></i>
-                                                <!-- 🌟 GÜNCELLEME: Sade kartta saatin yanına süre eklendi -->
                                                 {{ app.date | date:'HH:mm' }}
-                                                <span *ngIf="app.duration > 30" class="text-xs text-500 font-italic ml-1">(+{{ app.duration }}dk)</span>
+                                                <span *ngIf="app.duration > 30" class="text-xs font-italic ml-1" [ngClass]="app.isImportant ? 'text-purple-600' : 'text-500'">(+{{ app.duration }}dk)</span>
                                             </span>
-                                            <i class="pi pi-sync cursor-pointer hover:text-black-alpha-90" 
+                                            <i class="pi pi-sync cursor-pointer hover:opacity-70" 
                                                (click)="openStatusDialog(app); $event.stopPropagation()"
                                                pTooltip="Durumu Güncelle" tooltipPosition="top">
                                             </i>
                                         </div>
                                         
-                                        <div class="font-semibold text-sm white-space-nowrap overflow-hidden text-overflow-ellipsis" [title]="app.patientName">
+                                        <div class="font-semibold text-sm white-space-nowrap overflow-hidden text-overflow-ellipsis flex align-items-center" [title]="app.patientName">
+                                            <i *ngIf="app.isImportant" class="pi pi-exclamation-triangle text-red-500 mr-1 blinking-icon"></i>
                                             {{ app.patientName }}
                                         </div>
                                     </div>
@@ -225,70 +202,56 @@
                         </div>
                     </div>
 
-                    <!-- ========================================== -->
-                    <!-- 2. GÖRÜNÜM: DETAYLI (SAATLİK) ZAMAN ÇİZELGESİ -->
-                    <!-- ========================================== -->
                     <div class="grid m-0" *ngIf="isDetailedWeeklyView">
                         <div class="col-12 md:col p-1" *ngFor="let day of detailedWeeklyAgenda">
                             <div class="surface-card shadow-1 border-round h-full p-2">
-                                
                                 <div class="text-center font-bold border-bottom-1 surface-border pb-2 mb-3">
                                     <div class="text-700">{{ day.dayName }}</div>
                                     <div class="text-500 text-sm font-normal">{{ day.date | date:'dd.MM.yyyy' }}</div>
                                 </div>
-                
                                 <div class="flex flex-column gap-2">
                                     <div *ngFor="let slot of day.slots" class="border-bottom-1 surface-border pb-2">
-                                        
-                                        <!-- Saat Başlığı (Örn: 09:30) -->
                                         <div class="text-500 text-xs font-bold mb-1 ml-1">
                                             <i class="pi pi-clock mr-1" style="font-size: 0.7rem"></i>{{ slot.hourLabel }}
                                         </div>
-                                        
-                                        <!-- BOŞ SLOT KUTUSU -->
                                         <div *ngIf="slot.appointments.length === 0" 
                                              class="border-round border-1 border-dashed surface-border p-2 text-center text-400 text-xs hover:surface-hover cursor-pointer transition-colors transition-duration-200"
                                              routerLink="/appointments/create"
                                              pTooltip="Bu saate yeni randevu ekle">
                                             <i class="pi pi-plus mr-1" style="font-size: 0.6rem"></i> Boş
                                         </div>
-
-                                        <!-- DOLU SLOT KUTUSU -->
                                         <div class="flex flex-column gap-2" *ngIf="slot.appointments.length > 0">
                                             <div *ngFor="let app of slot.appointments" 
-                                                 class="border-left-3 border-round p-2 cursor-pointer hover:shadow-2 transition-duration-200"
-                                                 [ngClass]="getCardColor(app.status)"
+                                                 class="border-left-3 border-round p-2 cursor-pointer transition-duration-200 hover:shadow-4"
+                                                 [ngClass]="app.isImportant ? 'border-purple-500 bg-purple-50 text-purple-900 shadow-3' : getCardColor(app.status)"
                                                  (click)="openDetailsDialog(app)"
                                                  pTooltip="Detayları görmek için tıklayın">
                                                 
                                                 <div class="flex justify-content-between align-items-center mb-1">
                                                     <span class="font-bold text-sm">
-                                                        <!-- 🌟 GÜNCELLEME: Detaylı kartta saatin yanına süre eklendi -->
                                                         {{ app.date | date:'HH:mm' }}
-                                                        <span *ngIf="app.duration > 30" class="text-xs text-500 font-italic ml-1">(+{{ app.duration }}dk)</span>
+                                                        <span *ngIf="app.duration > 30" class="text-xs font-italic ml-1" [ngClass]="app.isImportant ? 'text-purple-600' : 'text-500'">(+{{ app.duration }}dk)</span>
                                                     </span>
-                                                    <i class="pi pi-sync cursor-pointer hover:text-black-alpha-90" 
+                                                    <i class="pi pi-sync cursor-pointer hover:opacity-70" 
                                                        (click)="openStatusDialog(app); $event.stopPropagation()"
                                                        pTooltip="Durumu Güncelle" tooltipPosition="top">
                                                     </i>
                                                 </div>
                                                 
-                                                <div class="font-semibold text-sm white-space-nowrap overflow-hidden text-overflow-ellipsis" [title]="app.patientName">
+                                                <div class="font-semibold text-sm white-space-nowrap overflow-hidden text-overflow-ellipsis flex align-items-center" [title]="app.patientName">
+                                                    <i *ngIf="app.isImportant" class="pi pi-exclamation-triangle text-red-500 mr-1 blinking-icon"></i>
                                                     {{ app.patientName }}
                                                 </div>
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                 </p-tabPanel>
 
-                <!-- SEKME 3: TÜM RANDEVULAR -->
-                <p-tabPanel>
+              <p-tabPanel>
                     <ng-template pTemplate="header">
                         <i class="pi pi-list mr-2"></i><span class="font-bold">Tüm Randevular</span>
                     </ng-template>
@@ -304,7 +267,8 @@
                         </ng-template>
                         <ng-template pTemplate="header">
                             <tr>
-                                <th pSortableColumn="date">Tarih / Saat <p-sortIcon field="date"></p-sortIcon></th>
+                                <th pSortableColumn="date">Tarih <p-sortIcon field="date"></p-sortIcon></th>
+                                <th pSortableColumn="date">Saat <p-sortIcon field="date"></p-sortIcon></th>
                                 <th pSortableColumn="patientName">Hasta Adı <p-sortIcon field="patientName"></p-sortIcon></th>
                                 <th>Açıklama</th>
                                 <th>Durum</th>
@@ -314,36 +278,32 @@
                         </ng-template>
                         <ng-template pTemplate="body" let-appointment>
                             <tr>
-                                <!-- 🌟 GÜNCELLEME: Tabloda saatin yanına süre eklendi -->
-                                <td>
-                                    {{ appointment.date | date:'dd.MM.yyyy HH:mm' }}
+                                <td class="font-semibold text-700">
+                                    {{ appointment.date | date:'dd.MM.yyyy' }}
+                                </td>
+                                <td class="font-bold text-primary">
+                                    {{ appointment.date | date:'HH:mm' }}
                                     <span *ngIf="appointment.duration > 30" class="text-xs text-500 font-italic ml-1">(+{{ appointment.duration }}dk)</span>
                                 </td>
-                                <td>{{ appointment.patientName || 'Belirtilmemiş' }}</td>
+                                
+                                <td class="font-bold">
+                                    <i *ngIf="appointment.isImportant" class="pi pi-exclamation-triangle text-red-500 mr-2 blinking-icon" pTooltip="Önemli Randevu"></i>
+                                    <span [ngClass]="{'text-red-500': appointment.isImportant}">{{ appointment.patientName || 'Belirtilmemiş' }}</span>
+                                </td>
                                 <td style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" [title]="appointment.notes"> {{ appointment.notes }} </td>
                                 <td><p-tag [value]="getStatusLabel(appointment.status || 'Pending')" [severity]="getSeverity(appointment.status || 'Pending')"></p-tag></td>
                                 <td style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" [title]="appointment.completionNotes"> {{ appointment.completionNotes }} </td>
-                             
                                 <td>
-                                <div class="flex">
-                                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"></button>
-
-                                    <button pButton pRipple icon="pi pi-sync" class="p-button-rounded p-button-info mr-2" pTooltip="Durumu Güncelle" (click)="openStatusDialog(appointment)"></button>
-
-                                    <button 
-                                        pButton 
-                                        pRipple 
-                                        icon="pi pi-eye" 
-                                        class="p-button-rounded p-button-warning" 
-                                        (click)="openDetailsDialog(appointment)" 
-                                        pTooltip="Detayları Gör">
-                                    </button>
-                                </div>
+                                    <div class="flex">
+                                        <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"></button>
+                                        <button pButton pRipple icon="pi pi-sync" class="p-button-rounded p-button-info mr-2" pTooltip="Durumu Güncelle" (click)="openStatusDialog(appointment)"></button>
+                                        <button pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-warning" (click)="openDetailsDialog(appointment)" pTooltip="Detayları Gör"></button>
+                                    </div>
                                 </td>
                             </tr>
                         </ng-template>
                         <ng-template pTemplate="emptymessage">
-                            <tr><td colspan="6" class="text-center p-4">Henüz planlanmış bir randevu yok.</td></tr>
+                            <tr><td colspan="7" class="text-center p-4">Henüz planlanmış bir randevu yok.</td></tr>
                         </ng-template>
                     </p-table>
                 </p-tabPanel>
@@ -353,57 +313,32 @@
     </div>
 </div>
 
-<!-- DURUM GÜNCELLEME DİALOG PENCERESİ -->
-<p-dialog 
-    header="Randevu Durumunu Güncelle" 
-    [(visible)]="statusDialogVisible" 
-    [modal]="true" 
-    [style]="{width: '400px'}"
-    [draggable]="false"
-    [resizable]="false">
-    
+<p-dialog header="Randevu Durumunu Güncelle" [(visible)]="statusDialogVisible" [modal]="true" [style]="{width: '400px'}" [draggable]="false" [resizable]="false">
     <div class="flex flex-column gap-3 mt-3">
         <label class="font-bold text-600">Yeni Durumu Seçiniz:</label>
-        <p-dropdown 
-            [options]="statusOptions" 
-            [(ngModel)]="newStatus" 
-            optionLabel="label" 
-            optionValue="value" 
-            styleClass="w-full" 
-            appendTo="body">
-        </p-dropdown>
+        <p-dropdown [options]="statusOptions" [(ngModel)]="newStatus" optionLabel="label" optionValue="value" styleClass="w-full" appendTo="body"></p-dropdown>
 
         <ng-container *ngIf="newStatus === 2 || newStatus === 3 || newStatus === 4">
-            <label class="font-bold text-600 mt-2">
-                {{ newStatus === 2 ? 'Tedavi Notları:' : (newStatus === 3 ? 'İptal Sebebi:' : 'Gelmeme Sebebi:') }}
-                </label>
-            <textarea 
-                pInputTextarea 
-                [(ngModel)]="appointmentNote" 
-                rows="3" 
-                class="w-full" 
-                placeholder="Lütfen bu işlem için bir not giriniz..."></textarea>
+            <label class="font-bold text-600 mt-2">{{ newStatus === 2 ? 'Tedavi Notları:' : (newStatus === 3 ? 'İptal Sebebi:' : 'Gelmeme Sebebi:') }}</label>
+            <textarea pInputTextarea [(ngModel)]="appointmentNote" rows="3" class="w-full" placeholder="Lütfen bu işlem için bir not giriniz..."></textarea>
         </ng-container>
-
     </div>
-    
     <ng-template pTemplate="footer">
         <button pButton pRipple label="İptal" icon="pi pi-times" class="p-button-text p-button-secondary" (click)="statusDialogVisible = false"></button>
         <button pButton pRipple label="Kaydet" icon="pi pi-check" class="p-button-success" (click)="saveStatus()"></button>
     </ng-template>
 </p-dialog>
 
-<!-- DETAY DİALOG PENCERESİ -->
-<p-dialog 
-    header="Randevu Detayları" 
-    [(visible)]="detailsDialogVisible" 
-    [modal]="true" 
-    [style]="{width: '450px'}" 
-    [draggable]="false" 
-    [resizable]="false">
-    
+<p-dialog header="Randevu Detayları" [(visible)]="detailsDialogVisible" [modal]="true" [style]="{width: '450px'}" [draggable]="false" [resizable]="false">
     <div class="flex flex-column gap-3 mt-3" *ngIf="viewingAppointment">
-        
+        <div class="p-3 border-round bg-red-50 text-red-900 border-1 border-red-200 mb-2 flex align-items-center" *ngIf="viewingAppointment.isImportant">
+            <i class="pi pi-exclamation-triangle text-2xl mr-3 blinking-icon"></i>
+            <div>
+                <div class="font-bold">Önemli/Öncelikli Randevu</div>
+                <div class="text-sm">Bu randevuya özel özen gösterilmesi gerekmektedir.</div>
+            </div>
+        </div>
+
         <div class="field">
             <label class="font-bold text-600">Randevu Açıklaması:</label>
             <div class="p-3 border-round surface-100 mt-1" style="min-height: 4rem; white-space: pre-wrap; word-break: break-word;">
@@ -411,19 +346,13 @@
             </div>
         </div>
 
-        <div class="field" *ng,If="viewingAppointment.status === 2 || viewingAppointment.status === 3 || viewingAppointment.status === 4">
-            <label class="font-bold text-600">
-                {{ viewingAppointment.status === 2 ? 'Tedavi Notları:' : (viewingAppointment.status === 3 ? 'İptal Sebebi:' : 'Gelmeme Sebebi:') }}
-            </label>
+        <div class="field" *ngIf="viewingAppointment.status === 2 || viewingAppointment.status === 3 || viewingAppointment.status === 4">
+            <label class="font-bold text-600">{{ viewingAppointment.status === 2 ? 'Tedavi Notları:' : (viewingAppointment.status === 3 ? 'İptal Sebebi:' : 'Gelmeme Sebebi:') }}</label>
             <div class="p-3 border-round surface-100 mt-1" style="min-height: 4rem; white-space: pre-wrap; word-break: break-word;">
-             
                 {{ viewingAppointment.completionNotes || 'Durum için bir not girilmemiş.' }}
-                
             </div>
         </div>
-
     </div>
-    
     <ng-template pTemplate="footer">
         <button pButton pRipple label="Kapat" icon="pi pi-times" class="p-button-text p-button-secondary" (click)="detailsDialogVisible = false"></button>
     </ng-template>
