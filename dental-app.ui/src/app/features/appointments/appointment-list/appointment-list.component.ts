@@ -72,7 +72,7 @@ export class AppointmentListComponent implements OnInit {
     });
   }
 
- processAppointments() {
+/*  processAppointments() {
     const now = new Date();
     
     this.todayAppointments = this.appointments.filter(app => {
@@ -81,6 +81,32 @@ export class AppointmentListComponent implements OnInit {
 
     const startOfWeek = this.getStartOfWeek(new Date(now));
     const endOfWeek = this.getEndOfWeek(new Date(now));
+    
+    this.weeklyAppointments = this.appointments.filter(app => {
+      const appDate = new Date(app.date);
+      return appDate >= startOfWeek && appDate <= endOfWeek;
+    });
+
+    this.generateTodayTimeline(); 
+    this.generateWeeklyAgenda(startOfWeek);
+  }
+ */
+// TEST AMAÇLI GÖRÜNÜM ***********************
+
+processAppointments() {
+    // 🌟 TEST MODU: Hedef tarihi "Önümüzdeki Pazartesi" olarak ayarlıyoruz
+    const testDate = new Date();
+    // Bugünden sonraki ilk Pazartesi gününü bulur
+    testDate.setDate(testDate.getDate() + ((1 + 7 - testDate.getDay()) % 7 || 7)); 
+
+    // 1. Bugünün randevuları artık "Gelecek Pazartesi"nin randevuları oldu
+    this.todayAppointments = this.appointments.filter(app => {
+        return this.isSameDay(new Date(app.date), testDate);
+    });
+
+    // 2. Haftalık görünüm de bu test tarihini baz alacak
+    const startOfWeek = this.getStartOfWeek(new Date(testDate));
+    const endOfWeek = this.getEndOfWeek(new Date(testDate));
     
     this.weeklyAppointments = this.appointments.filter(app => {
       const appDate = new Date(app.date);
@@ -152,7 +178,7 @@ generateWeeklyAgenda(startOfWeek: Date) {
     }
   }
 
-generateTodayTimeline() {
+/* generateTodayTimeline() {
     this.todayTimeline = [];
     const now = new Date();
     const todayStr = now.toDateString();
@@ -188,7 +214,58 @@ generateTodayTimeline() {
             isPast: isPast
         });
     });
+  } */
+
+
+// ************************  TEST TEST  TEST  TEST *******************%
+
+// 🌟 GÜNCEL BUGÜN TİMELİNE'I (TEST MODU)
+  generateTodayTimeline() {
+    this.todayTimeline = [];
+    
+    // 🌟 TEST MODU: 'now' değişkenini gerçek zaman yerine gelecek Pazartesi saat 10:30 olarak eziyoruz!
+    const now = new Date();
+    now.setDate(now.getDate() + ((1 + 7 - now.getDay()) % 7 || 7)); // Önümüzdeki Pazartesi
+    now.setHours(10, 30, 0, 0); // Saat sabah 10:30'da sisteme girmişsiniz gibi davranacak
+
+    const timeSlotsTemplate: string[] = [];
+    for (let h = 8; h < 17; h++) {
+        for (let m = 0; m < 60; m += 30) {
+            if (h === 8 && m === 0) continue; 
+            timeSlotsTemplate.push(`${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`);
+        }
+    }
+
+    this.todayAppointments.forEach(app => {
+        const appDate = new Date(app.date);
+        const timeStr = `${appDate.getHours().toString().padStart(2, '0')}:${appDate.getMinutes().toString().padStart(2, '0')}`;
+        if (!timeSlotsTemplate.includes(timeStr)) timeSlotsTemplate.push(timeStr);
+    });
+
+    timeSlotsTemplate.sort();
+
+    timeSlotsTemplate.forEach(timeLabel => {
+        // ARTIK EŞİTLİĞE DEĞİL, ZAMAN ARALIĞINA BAKIYORUZ
+        const appsInThisSlot = this.todayAppointments.filter(app => this.isSlotOccupied(timeLabel, app, now));
+
+        const [hStr, mStr] = timeLabel.split(':');
+        const h = parseInt(hStr, 10);
+        const m = parseInt(mStr, 10);
+        
+        // Geçmiş saat hesaplaması (Test saati olan 10:30'a göre çalışacak)
+        const isPast = (h < now.getHours()) || (h === now.getHours() && m <= now.getMinutes());
+
+        this.todayTimeline.push({
+            timeLabel: timeLabel,
+            appointments: appsInThisSlot,
+            isPast: isPast
+        });
+    });
   }
+
+
+
+
   // 🌟 YENİ: Kanban kartlarının rengini belirleyen metot
   getCardColor(status: number | string | undefined): string {
     const statusNum = Number(status || 1);

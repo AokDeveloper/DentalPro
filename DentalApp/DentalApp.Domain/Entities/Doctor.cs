@@ -10,6 +10,7 @@ namespace DentalApp.Domain.Entities
         public string? AppUserId { get; set; }
         public AppUser? AppUser { get; set; }
         public ICollection<Appointment> Appointments { get; set; }
+        public ICollection<Patient> Patients { get; private set; } = new List<Patient>();
 
         protected Doctor()
         {
