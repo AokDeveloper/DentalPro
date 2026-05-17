@@ -1,0 +1,81 @@
+<p-toast></p-toast>
+
+<div class="grid">
+    <div class="col-12 md:col-8 lg:col-6 mx-auto">
+        <div class="card p-fluid mt-4 shadow-2 border-round-xl">
+            
+            <div class="flex align-items-center mb-4 border-bottom-1 surface-border pb-3">
+                <button pButton pRipple icon="pi pi-arrow-left" class="p-button-text p-button-secondary mr-3" routerLink="/patients" pTooltip="Listeye Dön"></button>
+                <h4 class="m-0 font-bold text-700">Yeni Hasta Kaydı</h4>
+            </div>
+
+            <div class="formgrid grid">
+                <div class="field col-12 md:col-6 mb-4">
+                    <label for="firstName" class="font-semibold text-700">Ad <span class="text-red-500">*</span></label>
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-user"></i>
+                        <input id="firstName" type="text" pInputText [(ngModel)]="patientModel.firstName" placeholder="Hastanın adı..." autocomplete="off" />
+                    </span>
+                </div>
+
+                <div class="field col-12 md:col-6 mb-4">
+                    <label for="lastName" class="font-semibold text-700">Soyad <span class="text-red-500">*</span></label>
+                    <span class="p-input-icon-left">
+                        <i class="pi pi-user"></i>
+                        <input id="lastName" type="text" pInputText [(ngModel)]="patientModel.lastName" placeholder="Hastanın soyadı..." autocomplete="off" />
+                    </span>
+                </div>
+            </div>
+
+            <div class="field mb-4">
+                <label for="tckn" class="font-semibold text-700">T.C. Kimlik Numarası</label>
+                <span class="p-input-icon-left">
+                    <i class="pi pi-id-card"></i>
+                    <input id="tckn" type="text" pInputText pKeyFilter="int" [maxlength]="11" [(ngModel)]="patientModel.tckn" placeholder="11 haneli TCKN giriniz..." autocomplete="off" />
+                </span>
+            </div>
+
+            <div class="field mb-4">
+                <label for="birthDate" class="font-semibold text-700">Doğum Tarihi</label>
+                <p-calendar 
+                    id="birthDate" 
+                    [(ngModel)]="patientModel.birthDate" 
+                    [showIcon]="true" 
+                    dateFormat="dd.mm.yy" 
+                    placeholder="Gün.Ay.Yıl" 
+                    [maxDate]="today"
+                    [monthNavigator]="true" 
+                    [yearNavigator]="true" 
+                    yearRange="1900:2030"
+                    [showButtonBar]="true"
+                    styleClass="w-full">
+                </p-calendar>
+            </div>
+
+            <div class="field mb-4">
+                <label for="phone" class="font-semibold text-700">Telefon Numarası <span class="text-red-500">*</span></label>
+                <p-inputMask id="phone" mask="(999) 999 99 99" [(ngModel)]="patientModel.phoneNumber" placeholder="(5XX) XXX XX XX"></p-inputMask>
+            </div>
+
+            <div class="field mb-5">
+                <label for="supervisor" class="font-semibold text-700">Danışman Hoca</label>
+                <p-dropdown 
+                    id="supervisor" 
+                    [options]="supervisors" 
+                    [(ngModel)]="patientModel.supervisorId" 
+                    optionLabel="fullName" 
+                    optionValue="id" 
+                    placeholder="Danışman Hoca Seçiniz..." 
+                    [showClear]="true" 
+                    styleClass="w-full">
+                </p-dropdown>
+            </div>
+
+            <div class="flex justify-content-end border-top-1 surface-border pt-4 mt-2">
+                <button pButton pRipple label="İptal Et" icon="pi pi-times" class="p-button-text p-button-secondary w-auto mr-2" routerLink="/patients"></button>
+                <button pButton pRipple label="Hastayı Kaydet" icon="pi pi-save" class="p-button-primary w-auto" [loading]="loading" (click)="save()"></button>
+            </div>
+            
+        </div>
+    </div>
+</div>

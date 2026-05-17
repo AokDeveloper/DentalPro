@@ -1,10 +1,11 @@
 ﻿using DentalApp.Application.Features.Patients.Queries.GetAllPatients;
-using MediatR;
+using DentalApp.Application.Features.Supervisors.Queries;
 using FastEndpoints;
+using MediatR;
 
-namespace DentalApp.WebApi.Endpoints.Patients
+namespace DentalApp.WebApi.Endpoints.Supervisors
 {
-    public class GetList : EndpointWithoutRequest<GetAllPatientsResponse>
+    public class GetList : EndpointWithoutRequest<GetAllSupervisorsResponse>
     {
         private readonly ISender _sender;
 
@@ -15,14 +16,14 @@ namespace DentalApp.WebApi.Endpoints.Patients
 
         public override void Configure()
         {
-            Get("/api/patients");
-            //AllowAnonymous();
+            Get("/api/supervisors");
+            AllowAnonymous();
         }
 
         public override async Task HandleAsync(CancellationToken ct)
         {
             // Query'i gönder
-            var result = await _sender.Send(new GetAllPatientsQuery(), ct);
+            var result = await _sender.Send(new GetAllSupervisorsQuery(), ct);
 
             // Cevabı dön
             await SendOkAsync(result, ct);

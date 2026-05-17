@@ -10,7 +10,8 @@ namespace DentalApp.Application.Features.Patients.Commands.CreatePatient
         public string TCKN { get; init; }
         public string PhoneNumber { get; init; }
         public DateOnly BirthDate { get; set; }
-        public Guid DoctorId { get; set; }
+        public Guid SupervisorId { get; set; }
+
     }
 
 }

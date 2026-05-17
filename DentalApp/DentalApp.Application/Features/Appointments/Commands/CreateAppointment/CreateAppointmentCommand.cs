@@ -8,8 +8,7 @@ namespace DentalApp.Application.Features.Appointments.Commands.CreateAppointment
     {
         public Guid PatientId { get;  init; }
         public DateTime Date { get;  init; }      
-        public string? Notes { get;  init; }
-        public Guid DoctorId { get; init; }
+        public string? Notes { get;  init; }       
         public int Duration { get; set; }
         public bool IsImportant { get; set; }
     }

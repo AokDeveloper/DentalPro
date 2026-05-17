@@ -3,7 +3,10 @@ import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AppLayoutModule } from './layout/app.layout.module';
-import { HttpClientModule } from '@angular/common/http';
+
+// 🌟 YENİ YÖNTEM: Modern HTTP Sağlayıcıları
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { authInterceptor } from './core/interceptors/auth.interceptor'; // Dosya yolunuza göre ayarlayın
 
 @NgModule({
     declarations: [
@@ -11,11 +14,16 @@ import { HttpClientModule } from '@angular/common/http';
     ],
     imports: [
         AppRoutingModule,
-        AppLayoutModule,
-        HttpClientModule
+        AppLayoutModule
+        // 🌟 DİKKAT: HttpClientModule BURADAN TAMAMEN SİLİNDİ!
     ],
     providers: [
-        { provide: LocationStrategy, useClass: HashLocationStrategy }
+        { provide: LocationStrategy, useClass: HashLocationStrategy },
+        
+        // 🌟 İŞTE SİHİR BURADA: Gümrük memurunu (Interceptor) sisteme mühürlüyoruz
+        provideHttpClient(
+            withInterceptors([authInterceptor])
+        )
     ],
     bootstrap: [AppComponent]
 })

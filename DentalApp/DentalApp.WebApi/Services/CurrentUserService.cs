@@ -24,5 +24,22 @@ namespace DentalApp.WebApi.Services
                 return id;
             }
         }
+        public Guid? DoctorId // <--- Tipi Guid? olarak güncellendi
+        {
+            get
+            {
+                var doctorIdClaim = _httpContextAccessor.HttpContext?.User?.FindFirstValue("DoctorId");
+
+                // Eğer claim boş değilse ve geçerli bir Guid formatındaysa çevirip döndür
+                if (!string.IsNullOrEmpty(doctorIdClaim) && Guid.TryParse(doctorIdClaim, out Guid parsedId))
+                {
+                    return parsedId;
+                }
+
+                // Token'da yoksa veya dönüştürülemezse null dön
+                return null;
+            }
+        }
+
     }
 }

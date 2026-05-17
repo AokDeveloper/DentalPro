@@ -7,7 +7,7 @@ import { CardModule } from 'primeng/card';
 // IconField ve InputIcon importları YOK. Çünkü Sakai sürümünde bunlar yok.
 
 import { PatientService } from '../services/patient.service';
-import { Patient } from '../../../core/models/patient';
+import { PatientList } from '../../../core/models/patients/patientList';
 import { RouterModule } from '@angular/router';
 import { DialogModule } from 'primeng/dialog';
 import { ImageUploadComponent } from '../image-upload/image-upload.component';
@@ -20,7 +20,7 @@ import { ImageUploadComponent } from '../image-upload/image-upload.component';
 })
 export class PatientListComponent implements OnInit {
   
-  patients: Patient[] = [];
+  patients: PatientList[] = [];
   loading: boolean = true;
 
   constructor(private patientService: PatientService) {}

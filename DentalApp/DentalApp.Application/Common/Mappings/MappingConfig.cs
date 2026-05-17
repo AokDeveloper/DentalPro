@@ -1,6 +1,7 @@
 ﻿using DentalApp.Application.Features.Appointments.Queries;
 using DentalApp.Application.Features.Patients.Queries.GetAllPatients;
 using DentalApp.Application.Features.Patients.Queries.GetPatientImages;
+using DentalApp.Application.Features.Supervisors.Queries;
 using DentalApp.Domain.Entities;
 using Mapster;
 using System;
@@ -17,13 +18,16 @@ namespace DentalApp.Application.Common.Mappings
         {
             // 1. Hasta Listesi Mapping Ayarı
             config.NewConfig<Patient, PatientDto>()
-             .ConstructUsing(src => new PatientDto(
-                 src.Id,
-                 $"{src.FirstName} {src.LastName}",                 
-                 src.TCKN,
-                 src.PhoneNumber,
-                 src.BirthDate 
-             ));
+       .ConstructUsing(src => new PatientDto(
+           src.Id,
+           $"{src.FirstName} {src.LastName}",
+           src.TCKN,
+           src.PhoneNumber,
+           src.BirthDate,
+           src.SupervisorId,
+           // Supervisor nesnesi doluysa FullName'i al, boşsa "Atanmadı" (veya "") yaz
+           src.Supervisor != null ? src.Supervisor.FullName : "Atanmadı"
+       ));
             // İsim ve Soyismi birleştirip FullName yap dedik.
 
             // 2. Resim Listesi Mapping Ayarı
@@ -35,7 +39,11 @@ namespace DentalApp.Application.Common.Mappings
                 .Map(dest => dest.PatientName, src => $"{src.Patient.FirstName} {src.Patient.LastName}") // Ad Soyad Birleştirme
                 .Map(dest => dest.DoctorName, src => $"{src.Doctor.FirstName} {src.Doctor.LastName}")
                 .Map(dest => dest.Status, src => src.Status.ToString()); // Enum'ı string'e çevirme
-                 
+            config.NewConfig<Supervisor, SupervisorDto>()
+        .ConstructUsing(src => new SupervisorDto(
+            src.Id,
+            src.FullName
+              ));
         }
     }
 }

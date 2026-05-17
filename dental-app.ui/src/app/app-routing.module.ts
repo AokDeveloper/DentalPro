@@ -37,6 +37,10 @@ const routes: Routes = [
   path: 'patients/presentation/:id', 
   loadComponent: () => import('./features/patients/patient-presentation/patient-presentation.component').then(m => m.PatientPresentationComponent) 
 },
+{ 
+    path: 'patients/create', 
+    loadComponent: () => import('./features/patients/patient-create/patient-create.component').then(m => m.PatientCreateComponent) 
+},
 
             // İleride Hastalar modülünü buraya ekleyeceğiz
             // { path: 'patients', ... }

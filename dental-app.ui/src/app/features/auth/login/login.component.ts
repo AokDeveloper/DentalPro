@@ -10,7 +10,7 @@ import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
-
+import { CheckboxModule } from 'primeng/checkbox';
 import { AuthService } from '../../../core/auth/auth.service';
 
 @Component({
@@ -23,7 +23,8 @@ import { AuthService } from '../../../core/auth/auth.service';
     PasswordModule, 
     ButtonModule, 
     CardModule, 
-    ToastModule
+    ToastModule,
+    CheckboxModule
   ],
   providers: [MessageService],
   templateUrl: './login.component.html'

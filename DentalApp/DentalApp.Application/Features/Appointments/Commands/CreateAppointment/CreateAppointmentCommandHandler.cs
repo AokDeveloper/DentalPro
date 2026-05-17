@@ -9,13 +9,23 @@ namespace DentalApp.Application.Features.Appointments.Commands.CreateAppointment
     public class CreateAppointmentCommandHandler : IRequestHandler<CreateAppointmentCommand, Guid>
     {
         private readonly IApplicationDbContext _context;
-        public CreateAppointmentCommandHandler(IApplicationDbContext context)
+        private readonly ICurrentUserService _currentUserService;
+        public CreateAppointmentCommandHandler(IApplicationDbContext context,ICurrentUserService currentUserService)
         {
          _context = context;   
+         _currentUserService = currentUserService;
         }
 
         public async Task<Guid> Handle(CreateAppointmentCommand request, CancellationToken cancellationToken)
         {
+            var currentDoctorId = _currentUserService.DoctorId;
+
+
+            if (currentDoctorId == null)
+            {
+                throw new UnauthorizedAccessException("Geçerli bir doktor oturumu bulunamadı. Lütfen tekrar giriş yapın.");
+            }
+
             var patientExists = await _context.Patients
                 .AnyAsync(p => p.Id == request.PatientId, cancellationToken);
 
@@ -29,7 +39,7 @@ namespace DentalApp.Application.Features.Appointments.Commands.CreateAppointment
                 request.PatientId,
                 request.Date,
                 request.Notes,
-                request.DoctorId,
+                 currentDoctorId.Value,
                 request.Duration,
                 request.IsImportant
                 );
