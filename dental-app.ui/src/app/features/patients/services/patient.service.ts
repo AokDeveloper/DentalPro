@@ -8,13 +8,21 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-// "export" kelimesine DİKKAT EDİN. Bu olmazsa diğer dosyalar burayı göremez.
 export class PatientService extends BaseService<PatientList> {
 
   constructor(httpClient: HttpClient) {
+    // apiUrl = environment.apiUrl + 'patients' şeklinde set edildi
     super(httpClient, 'patients');
   }
-createPatient(payload: PatientCreate): Observable<any> {
+
+  createPatient(payload: PatientCreate): Observable<any> {
     return this.httpClient.post(`${this.apiUrl}`, payload);
   }
+
+  // 🌟 YENİ EKLENEN METOT: Sadece hastalara özel geçmiş randevu listesi
+  // this.apiUrl zaten '/api/patients' olduğu için devamına ID ve endpoint'i ekliyoruz.
+  getCompletedAppointments(patientId: string | number): Observable<any> {
+    return this.httpClient.get<any>(`${this.apiUrl}/${patientId}/completed-appointments`);
+  }
+  
 }

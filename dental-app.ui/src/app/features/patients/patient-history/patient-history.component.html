@@ -1,0 +1,90 @@
+<p-toast></p-toast>
+
+<div class="grid">
+    <div class="col-12">
+        <div class="card p-fluid mt-4 shadow-2 border-round-xl">
+            
+            <!-- Başlık ve Geri Dön Butonu -->
+            <div class="flex align-items-center mb-4 border-bottom-1 surface-border pb-3">
+                <button pButton pRipple icon="pi pi-arrow-left" class="p-button-text p-button-secondary mr-3" routerLink="/patients" pTooltip="Hasta Listesine Dön"></button>
+                <div class="flex flex-column">
+                    <h4 class="m-0 font-bold text-700">Tamamlanmış İşlemler</h4>
+                    <span class="text-500 text-sm mt-1">Hastaya ait geçmiş randevu ve işlem kayıtları</span>
+                </div>
+            </div>
+
+            <!-- İşlem Geçmişi Tablosu -->
+            <p-table 
+                [value]="historyRecords" 
+                responsiveLayout="scroll" 
+                [loading]="loading" 
+                [rowHover]="true"
+                [sortField]="'date'" 
+                [sortOrder]="-1" 
+                styleClass="p-datatable-striped border-1 surface-border border-round">
+                
+                <ng-template pTemplate="header">
+                    <tr>
+                        <!-- 🌟 Sıra Numarası -->
+                        <th style="width:5%" class="text-center">#</th>
+                        
+                        <!-- 🌟 Tarih Sütunu -->
+                        <th style="width:15%" pSortableColumn="date">
+                            İşlem Tarihi <p-sortIcon field="date"></p-sortIcon>
+                        </th>
+
+                        <!-- 🌟 YENİ: Saat Sütunu -->
+                        <th style="width:15%">İşlem Saati</th>
+                        
+                        <!-- 🌟 Notlar Sütunu -->
+                        <th style="width:65%">İşlem / Tamamlanma Notu</th>
+                    </tr>
+                </ng-template>
+                
+                <ng-template pTemplate="body" let-record let-i="rowIndex">
+                    <tr>
+                        <!-- Sıra Numarası -->
+                        <td class="text-center font-bold text-500">
+                            <span class="p-column-title">#</span>
+                            {{ i + 1 }}
+                        </td>
+                        
+                        <!-- Tarih -->
+                        <td>
+                            <span class="p-column-title">Tarih</span>
+                            <span class="font-semibold text-600">
+                                <i class="pi pi-calendar mr-2 text-primary"></i>
+                                {{ record.date | date:'dd.MM.yyyy' }}
+                            </span>
+                        </td>
+
+                        <!-- 🌟 YENİ: Saat -->
+                        <td>
+                            <span class="p-column-title">Saat</span>
+                            <span class="font-semibold text-600">
+                                <i class="pi pi-clock mr-2 text-orange-500"></i>
+                                {{ record.date | date:'HH:mm' }}
+                            </span>
+                        </td>
+                        
+                        <!-- Notlar -->
+                        <td>
+                            <span class="p-column-title">Notlar</span>
+                            <span class="text-700 line-height-3">{{ record.completionNotes }}</span>
+                        </td>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <!-- 🌟 Sütun sayısı 4'e çıktığı için colspan="4" yapıldı -->
+                        <td colspan="4" class="text-center p-5">
+                            <i class="pi pi-info-circle text-400 mb-3" style="font-size: 2rem;"></i>
+                            <div class="text-600 font-semibold text-lg">Bu hastaya ait tamamlanmış bir randevu kaydı bulunmamaktadır.</div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>

@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AppLayoutComponent } from './layout/app.layout.component';
 import { authGuard } from './core/auth/auth.guard';
+import { PatientHistoryComponent } from './features/patients/patient-history/patient-history.component';
 
 const routes: Routes = [
 
@@ -41,6 +42,10 @@ const routes: Routes = [
     path: 'patients/create', 
     loadComponent: () => import('./features/patients/patient-create/patient-create.component').then(m => m.PatientCreateComponent) 
 },
+{ 
+    path: 'patients/history/:id', 
+    loadComponent: () => import('./features/patients/patient-history/patient-history.component').then(m => m.PatientHistoryComponent) 
+}
 
             // İleride Hastalar modülünü buraya ekleyeceğiz
             // { path: 'patients', ... }
