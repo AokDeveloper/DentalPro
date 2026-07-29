@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DentalApp.Application.Features.Appointments.Queries
+namespace DentalApp.Application.Features.Appointments.Queries.GetAllAppointments
 {
     public class GetAllAppointmentsQueryHandler : IRequestHandler<GetAllAppointmentsQuery, GetAllAppointmentsResponse>
     {

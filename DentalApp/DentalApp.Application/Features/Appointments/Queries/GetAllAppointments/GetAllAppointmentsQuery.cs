@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DentalApp.Application.Features.Appointments.Queries
+namespace DentalApp.Application.Features.Appointments.Queries.GetAllAppointments
 {    
     public record GetAllAppointmentsQuery : IRequest<GetAllAppointmentsResponse>, ILoggableQuery;
 }

@@ -1,4 +1,4 @@
-﻿using DentalApp.Application.Features.Appointments.Queries;
+﻿using DentalApp.Application.Features.Appointments.Queries.GetAllAppointments;
 using FastEndpoints;
 using MediatR;
 
@@ -16,7 +16,7 @@ namespace DentalApp.WebApi.Endpoints.Appointments
         public override void Configure()
         {
             Get("/api/appointments");
-            AllowAnonymous(); // Test için açık
+            //AllowAnonymous();
             Summary(s =>
             {
                 s.Summary = "Randevuları Listele";

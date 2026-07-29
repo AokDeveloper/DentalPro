@@ -1,3 +1,5 @@
+<p-toast></p-toast> 
+
 <div class="grid">
     <div class="col-12">
         <div class="card">
@@ -68,7 +70,7 @@
                             <div class="flex">
                                 <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" pTooltip="Düzenle"></button>
                                 
-                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning mr-2" pTooltip="Sil"></button>
+                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning mr-2" pTooltip="Sil" (click)="deletePatient(patient)"></button>
                                 
                                 <button 
                                     pButton 
@@ -87,6 +89,7 @@
                                     pTooltip="Fotoğraf Yükle" 
                                     (click)="openUploadDialog(patient.id)">
                                 </button>
+                                 
                             </div>
                         </td>
                     </tr>
@@ -102,6 +105,31 @@
     </div>
 </div>
 
+
+<p-confirmDialog #cd [style]="{width: '600px'}" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">
+    
+    <!-- Başlık (Sakai standart ikon büyüklüğü ve font renkleri) -->
+    <ng-template pTemplate="header">
+        <div class="flex align-items-center gap-3">
+            <i class="pi pi-exclamation-triangle text-red-500" style="font-size: 2rem;"></i>
+            <span class="font-bold text-xl text-900">Kalıcı Olarak Silinecek</span>
+        </div>
+    </ng-template>
+
+    <!-- İçerik -->
+    <ng-template pTemplate="message" let-message>
+        <div class="text-700 text-lg pt-2 pb-1" [innerHTML]="message.message"></div>
+    </ng-template>
+
+    <!-- Butonlar (Sakai standart p-button-text kullanımı) -->
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Vazgeç" icon="pi pi-times" class="p-button-text p-button-secondary" (click)="cd.reject()"></button>
+        <button pButton pRipple label="Kalıcı Olarak Sil" icon="pi pi-trash" class="p-button-danger" (click)="cd.accept()"></button>
+    </ng-template>
+
+</p-confirmDialog>
+
+<!-- 🌟 FOTOĞRAF YÜKLEME PENCERESİ -->
 <p-dialog 
     header="Hastaya Yeni Fotoğraf Yükle" 
     [(visible)]="uploadDialogVisible" 
@@ -116,5 +144,4 @@
         [patientId]="selectedPatientIdForUpload" 
         (onUploadSuccess)="handleUploadSuccess()">
     </app-image-upload>
-
 </p-dialog>

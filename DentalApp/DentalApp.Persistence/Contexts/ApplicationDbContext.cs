@@ -36,6 +36,7 @@ namespace DentalApp.Persistence.Contexts
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+            modelBuilder.Entity<Patient>().HasQueryFilter(p => !p.IsDeleted); // Soft Delete için global filter
         }
 
         // --- HEM TIME STAMP HEM AUDIT LOG BURADA ---

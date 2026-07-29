@@ -1,4 +1,4 @@
-﻿using DentalApp.Application.Features.Appointments.Queries;
+﻿using DentalApp.Application.Features.Appointments.Queries.GetAllAppointments;
 using DentalApp.Application.Features.Patients.Queries.GetAllPatients;
 using DentalApp.Application.Features.Patients.Queries.GetPatientImages;
 using DentalApp.Application.Features.Supervisors.Queries;

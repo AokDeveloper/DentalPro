@@ -42,7 +42,7 @@ namespace DentalApp.Infrastructure.Services
                 issuer: _configuration["JwtSettings:Issuer"],
                 audience: _configuration["JwtSettings:Audience"],
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(2), // 1 Saatlik Token
+                expires: DateTime.UtcNow.AddMinutes(30), // 1 Saatlik Token
                 signingCredentials: creds
             );
 
