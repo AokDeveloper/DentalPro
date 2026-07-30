@@ -17,6 +17,7 @@ namespace DentalApp.Application.Common.Interfaces
         DbSet<AccessLog> AccessLogs { get; }
         DbSet<Doctor> Doctors { get; }
         DbSet<Supervisor> Supervisors { get; }
+        DbSet<PatientCategory> PatientCategories { get; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }

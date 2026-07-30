@@ -24,6 +24,7 @@ namespace DentalApp.Domain.Entities
 
         public ICollection<Appointment> Appointments { get; private set; } = new List<Appointment>();
         public ICollection<TreatmentImage> TreatmentImages { get; private set; } = new List<TreatmentImage>();
+        public ICollection<PatientCategory> PatientCategories { get; set; } = new List<PatientCategory>();
 
         protected Patient()
         {

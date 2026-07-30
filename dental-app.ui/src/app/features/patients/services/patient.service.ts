@@ -24,5 +24,10 @@ export class PatientService extends BaseService<PatientList> {
   getCompletedAppointments(patientId: string | number): Observable<any> {
     return this.httpClient.get<any>(`${this.apiUrl}/${patientId}/completed-appointments`);
   }
+
+  getGroupedCategories(): Observable<any[]> {
+    // this.apiUrl zaten '/api/patients' demek. Sonuna sadece alt rotayı ekliyoruz.
+    return this.httpClient.get<any[]>(`${this.apiUrl}/categories/grouped`);
+  }
   
 }

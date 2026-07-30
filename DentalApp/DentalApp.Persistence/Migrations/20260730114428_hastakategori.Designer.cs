@@ -4,6 +4,7 @@ using DentalApp.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DentalApp.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260730114428_hastakategori")]
+    partial class hastakategori
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -323,7 +326,7 @@ namespace DentalApp.Persistence.Migrations
 
                     b.HasIndex("ParentId");
 
-                    b.ToTable("PatientCategories");
+                    b.ToTable("PatientCategory");
                 });
 
             modelBuilder.Entity("DentalApp.Domain.Entities.Supervisor", b =>

@@ -31,6 +31,7 @@ namespace DentalApp.Persistence.Contexts
         public DbSet<AccessLog> AccessLogs { get; set; }
         public DbSet<Doctor> Doctors { get; set; }
         public DbSet<Supervisor> Supervisors { get; set; }
+        public DbSet<PatientCategory> PatientCategories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

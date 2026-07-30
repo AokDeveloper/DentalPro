@@ -12,6 +12,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
 import { DropdownModule } from 'primeng/dropdown';
+import { MultiSelectModule } from 'primeng/multiselect'; // YENİ EKLENDİ
 import { MessageService } from 'primeng/api';
 
 import { PatientService } from '../services/patient.service';
@@ -31,7 +32,8 @@ import { PatientCreate } from '../../../core/models/patients/patientCreate';
     CalendarModule, 
     ButtonModule, 
     ToastModule,
-    DropdownModule
+    DropdownModule,
+    MultiSelectModule // YENİ EKLENDİ
   ],
   providers: [MessageService],
   templateUrl: './patient-create.component.html'
@@ -44,12 +46,16 @@ export class PatientCreateComponent implements OnInit {
     tckn: '',
     phoneNumber: '',
     birthDate: null,
-    supervisorId: null
+    supervisorId: null,
+    selectedCategoryIds: [] // YENİ EKLENDİ
   };
 
   loading: boolean = false;
   today: Date = new Date();
   supervisors: any[] = [];
+  
+  groupedCategories: any[] = []; // YENİ EKLENDİ
+  categoriesLoading: boolean = true; // YENİ EKLENDİ
 
   constructor(
     private patientService: PatientService,
@@ -60,13 +66,40 @@ export class PatientCreateComponent implements OnInit {
 
   ngOnInit() {
     this.loadSupervisors();
+    this.loadCategories(); // YENİ EKLENDİ
   }
 
-loadSupervisors() {
+  // YENİ EKLENDİ
+loadCategories() {
+    this.categoriesLoading = true;
+    this.patientService.getGroupedCategories().subscribe({
+      next: (response: any) => {
+        
+        let extractedData = response.categories || response.items || response.data || response.$values || response;
+
+        if (Array.isArray(extractedData)) {
+            this.groupedCategories = extractedData;
+        } else {
+            this.groupedCategories = []; 
+        }
+        
+        this.categoriesLoading = false;
+      },
+      error: (err) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Hata',
+          detail: 'Kategori listesi yüklenirken bir sorun oluştu.'
+        });
+        console.error('Categories load error:', err); 
+        this.categoriesLoading = false;
+      }
+    });
+  }
+
+  loadSupervisors() {
     this.supervisorService.getList().subscribe({
-     
       next: (response: any) => { 
-       
         this.supervisors = response.supervisors; 
       },
       error: (err) => {
@@ -117,7 +150,8 @@ loadSupervisors() {
       tckn: this.patientModel.tckn,
       phoneNumber: this.patientModel.phoneNumber,
       birthDate: formattedDate,
-      supervisorId: this.patientModel.supervisorId
+      supervisorId: this.patientModel.supervisorId,
+selectedCategoryIds: this.patientModel.selectedCategoryIds // YENİ EKLENDİ
     } as any;
 
     this.patientService.createPatient(payload).subscribe({

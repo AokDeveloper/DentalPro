@@ -57,7 +57,7 @@
                 <p-inputMask id="phone" mask="(999) 999 99 99" [(ngModel)]="patientModel.phoneNumber" placeholder="(5XX) XXX XX XX"></p-inputMask>
             </div>
 
-            <div class="field mb-5">
+            <div class="field mb-4">
                 <label for="supervisor" class="font-semibold text-700">Danışman Hoca</label>
                 <p-dropdown 
                     id="supervisor" 
@@ -69,6 +69,37 @@
                     [showClear]="true" 
                     styleClass="w-full">
                 </p-dropdown>
+            </div>
+
+            <!-- 🌟 YENİ EKLENEN KATEGORİ SEÇİM ALANI -->
+        <div class="field mb-5">
+                <label for="categories" class="font-semibold text-700">Hasta Durumu / Etiketleri</label>
+                <p-multiSelect 
+                    id="categories"
+                    [options]="groupedCategories" 
+                    [(ngModel)]="patientModel.selectedCategoryIds" 
+                    [group]="true" 
+                    
+                    optionGroupLabel="groupName" 
+                    optionGroupChildren="items" 
+                    optionLabel="name"
+                    optionValue="id"
+
+                    defaultLabel="Etiket veya rahatsızlık seçiniz..." 
+                    scrollHeight="250px" 
+                    display="chip"
+                    [filter]="true"
+                    filterPlaceholder="Kategori ara..."
+                    [disabled]="categoriesLoading"
+                    styleClass="w-full">
+                    
+                    <ng-template let-group pTemplate="group">
+                        <div class="flex align-items-center">
+                            <span class="font-bold text-900">{{ group.groupName }}</span>
+                        </div>
+                    </ng-template>
+                    
+                </p-multiSelect>
             </div>
 
             <div class="flex justify-content-end border-top-1 surface-border pt-4 mt-2">

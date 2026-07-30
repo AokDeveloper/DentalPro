@@ -37,6 +37,25 @@ namespace DentalApp.Persistence.Configurations
                 .WithOne(a => a.Patient)
                 .HasForeignKey(a => a.PatientId)
                 .OnDelete(DeleteBehavior.Restrict); // Hasta silinirse randevuları silinmesin, hata versin (Veri güvenliği)
+
+            builder.HasKey(x => x.Id);
+
+            // Many-to-Many (Çoka-Çok) İlişki Konfigürasyonu
+            builder.HasMany(p => p.PatientCategories)
+                   .WithMany(c => c.Patients)
+                   .UsingEntity<Dictionary<string, object>>(
+                       "PatientCategoryAssignments", // Veritabanında oluşacak ARA TABLONUN adı
+                       j => j
+                        .HasOne<PatientCategory>()
+                        .WithMany()
+                        .HasForeignKey("PatientCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade), // Kategori silinirse ara tablodaki kayıt silinir
+                       j => j
+                        .HasOne<Patient>()
+                        .WithMany()
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Cascade) // Hasta silinirse ara tablodaki kayıt silinir
+                   );
         }
     }
 }

@@ -11,6 +11,7 @@ namespace DentalApp.Application.Features.Patients.Commands.CreatePatient
         public string PhoneNumber { get; init; }
         public DateOnly BirthDate { get; set; }
         public Guid SupervisorId { get; set; }
+        public List<Guid> SelectedCategoryIds { get; init; } = new();
 
     }
 
