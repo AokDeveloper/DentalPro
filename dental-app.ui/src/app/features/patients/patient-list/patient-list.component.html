@@ -11,7 +11,7 @@
                 [rows]="10" 
                 [loading]="loading" 
                 [paginator]="true" 
-                [globalFilterFields]="['fullName','phoneNumber', 'tckn']" 
+                [globalFilterFields]="['fullName','phoneNumber']" 
                 responsiveLayout="scroll"
                 [rowHover]="true"
                 dataKey="id"
@@ -34,7 +34,7 @@
                         <th pSortableColumn="tckn">Tc No <p-sortIcon field="tckn"></p-sortIcon></th>
                         <th pSortableColumn="supervisorFullName">Danışman Hoca <p-sortIcon field="supervisorFullName"></p-sortIcon></th>
                         <th pSortableColumn="phoneNumber">Telefon <p-sortIcon field="phoneNumber"></p-sortIcon></th>
-                        <!-- 🌟 YENİ KOLON BAŞLIĞI -->
+                        <!-- 🌟 YENİ KOLON EKLENDİ -->
                         <th>Durum / Etiket</th>
                         <th pSortableColumn="birthDate">Doğum Tarihi <p-sortIcon field="birthDate"></p-sortIcon></th>                        
                         <th>İşlemler</th>
@@ -43,7 +43,6 @@
 
                 <ng-template pTemplate="body" let-patient>
                     <tr>
-                        <!-- Genişlikler dengelendi -->
                         <td style="width:16%; min-width:12rem;">
                             <span class="p-column-title">Ad Soyad</span>
                             {{patient.fullName}}
@@ -64,16 +63,14 @@
                             {{patient.phoneNumber}}
                         </td>
 
-                        <!-- 🌟 YENİ: KATEGORİ (ETİKET) HÜCRESİ -->
+                        <!-- 🌟 YENİ ETİKET HÜCRESİ -->
                         <td style="width:14%; min-width:12rem;">
                             <span class="p-column-title">Durum / Etiket</span>
                             <div class="flex flex-wrap gap-1">
-                                <!-- İlk 2 etiketi göster (Dikdörtgen formda) -->
                                 <ng-container *ngFor="let cat of patient.categories | slice:0:2">
                                     <p-tag [value]="cat.name || cat" severity="info" [rounded]="false"></p-tag>
                                 </ng-container>
                                 
-                                <!-- 2'den fazla etiket varsa +X şeklinde göster -->
                                 <p-tag *ngIf="patient.categories?.length > 2"
                                        [value]="'+' + (patient.categories.length - 2)"
                                        severity="secondary"
@@ -82,7 +79,6 @@
                                        [rounded]="false">
                                 </p-tag>
 
-                                <!-- Hiç etiket yoksa -->
                                 <span *ngIf="!patient.categories || patient.categories.length === 0" class="text-500 text-sm">
                                     -
                                 </span>
@@ -97,9 +93,34 @@
                         <td style="width:20%; min-width:14rem;">
                             <div class="flex">
                                 <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning mr-2" pTooltip="Sil" (click)="deletePatient(patient)"></button>
-                                <button pButton pRipple icon="pi pi-images" class="p-button-rounded p-button-info mr-2" pTooltip="Before/After Sunumu" [routerLink]="['/patients/presentation', patient.id]"></button>
-                                <button pButton pRipple icon="pi pi-camera" class="p-button-rounded p-button-primary mr-2" pTooltip="Fotoğraf Yükle" (click)="openUploadDialog(patient.id)"></button>
-                                <button pButton pRipple icon="pi pi-history" class="p-button-rounded p-button-help mr-2" pTooltip="Geçmiş İşlemler" [routerLink]="['/patients/history', patient.id]"></button> 
+                                
+                                <button 
+                                    pButton 
+                                    pRipple 
+                                    icon="pi pi-images" 
+                                    class="p-button-rounded p-button-info mr-2" 
+                                    pTooltip="Before/After Sunumu"
+                                    [routerLink]="['/patients/presentation', patient.id]">
+                                </button>
+                                
+                                <button 
+                                    pButton 
+                                    pRipple 
+                                    icon="pi pi-camera" 
+                                    class="p-button-rounded p-button-primary  mr-2" 
+                                    pTooltip="Fotoğraf Yükle" 
+                                    (click)="openUploadDialog(patient.id)">
+                                </button>
+                                
+                                <button 
+                                    pButton 
+                                    pRipple 
+                                    icon="pi pi-history" 
+                                    class="p-button-rounded p-button-help mr-2" 
+                                    pTooltip="Geçmiş İşlemler"
+                                    [routerLink]="['/patients/history', patient.id]">
+                                </button> 
+                                 
                             </div>
                         </td>
                     </tr>
@@ -107,6 +128,7 @@
 
                 <ng-template pTemplate="emptymessage">
                     <tr>
+                        <!-- 🌟 COLSPAN 6'dan 7'ye çıkarıldı çünkü yeni kolon ekledik -->
                         <td colspan="7" class="text-center p-4">Hiç hasta kaydı bulunamadı.</td>
                     </tr>
                 </ng-template>
@@ -115,4 +137,36 @@
     </div>
 </div>
 
-<!-- Modal kodlarınız olduğu gibi kalabilir... -->
+<!-- 🌟 SİLİNEN ONAY PENCERESİ GERİ GELDİ -->
+<p-confirmDialog #cd [style]="{width: '600px'}" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">
+    <ng-template pTemplate="header">
+        <div class="flex align-items-center gap-3">
+            <i class="pi pi-exclamation-triangle text-red-500" style="font-size: 2rem;"></i>
+            <span class="font-bold text-xl text-900">Kalıcı Olarak Silinecek</span>
+        </div>
+    </ng-template>
+    <ng-template pTemplate="message" let-message>
+        <div class="text-700 text-lg pt-2 pb-1" [innerHTML]="message.message"></div>
+    </ng-template>
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Vazgeç" icon="pi pi-times" class="p-button-text p-button-secondary" (click)="cd.reject()"></button>
+        <button pButton pRipple label="Kalıcı Olarak Sil" icon="pi pi-trash" class="p-button-danger" (click)="cd.accept()"></button>
+    </ng-template>
+</p-confirmDialog>
+
+<!-- 🌟 SİLİNEN FOTOĞRAF YÜKLEME PENCERESİ GERİ GELDİ -->
+<p-dialog 
+    header="Hastaya Yeni Fotoğraf Yükle" 
+    [(visible)]="uploadDialogVisible" 
+    [modal]="true" 
+    [style]="{width: '50vw'}" 
+    [breakpoints]="{'960px': '75vw', '640px': '95vw'}"
+    [draggable]="false" 
+    [resizable]="false">
+    
+    <app-image-upload 
+        *ngIf="uploadDialogVisible" 
+        [patientId]="selectedPatientIdForUpload" 
+        (onUploadSuccess)="handleUploadSuccess()">
+    </app-image-upload>
+</p-dialog>

@@ -59,15 +59,13 @@ export class PatientListComponent implements OnInit {
   getPatients() {
     this.patientService.getList().subscribe({
       next: (response: any) => {
-        // 🌟 Güvenli veri çıkarma yöntemi eklendi (response.patients, items, data vb.)
+        // Güvenli veri çıkarma yapısı
         let extractedData = response.patients || response.items || response.data || response.$values || response;
-
         if (Array.isArray(extractedData)) {
             this.patients = extractedData;
         } else {
             this.patients = []; 
         }
-        
         this.loading = false;
       },
       error: (err) => {
@@ -112,8 +110,8 @@ export class PatientListComponent implements OnInit {
       }
     });
   }
-
-  // 🌟 EKLENDİ: Tabloda 2'den fazla etiket olduğunda, mouse üzerine gelince tamamını virgülle gösteren metot
+  
+  // 🌟 EKLENDİ: Etiket taşkınını Tooltip içinde göstermek için
   getCategoryNames(categories: any[]): string {
     if (!categories || categories.length === 0) return '';
     return categories.map(c => c.name || c.categoryName || c.label || c).join(', ');
