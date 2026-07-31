@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace DentalApp.Application.Features.Patients.Queries.GetAllPatients
 {
-    
-    public record PatientDto(Guid Id, string FullName, string TCKN, string PhoneNumber, DateOnly BirthDate, Guid? SupervisorId, string SupervisorFullName);
+
+    public record PatientListCategoryDto(Guid Id, string Name);
+    public record PatientDto(Guid Id, string FullName, string TCKN, string PhoneNumber, DateOnly BirthDate, Guid? SupervisorId, string SupervisorFullName, List<PatientListCategoryDto> Categories);
 
   
     public record GetAllPatientsResponse

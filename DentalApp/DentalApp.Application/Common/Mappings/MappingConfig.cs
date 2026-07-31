@@ -18,16 +18,19 @@ namespace DentalApp.Application.Common.Mappings
         {
             // 1. Hasta Listesi Mapping Ayarı
             config.NewConfig<Patient, PatientDto>()
-       .ConstructUsing(src => new PatientDto(
-           src.Id,
-           $"{src.FirstName} {src.LastName}",
-           src.TCKN,
-           src.PhoneNumber,
-           src.BirthDate,
-           src.SupervisorId,
-           // Supervisor nesnesi doluysa FullName'i al, boşsa "Atanmadı" (veya "") yaz
-           src.Supervisor != null ? src.Supervisor.FullName : "Atanmadı"
-       ));
+                .ConstructUsing(src => new PatientDto(
+                    src.Id,
+                    $"{src.FirstName} {src.LastName}",
+                    src.TCKN,
+                    src.PhoneNumber,
+                    src.BirthDate,
+                    src.SupervisorId,
+                    // Supervisor nesnesi doluysa FullName'i al, boşsa "Atanmadı" yaz
+                    src.Supervisor != null ? src.Supervisor.FullName : "Atanmadı",
+
+                    // YENİ EKLENEN 8. PARAMETRE: Alt kategorileri PatientListCategoryDto'ya çevirip listeliyoruz
+                    src.PatientCategories.Select(c => new PatientListCategoryDto(c.Id, c.Name)).ToList()
+                ));
             // İsim ve Soyismi birleştirip FullName yap dedik.
 
             // 2. Resim Listesi Mapping Ayarı

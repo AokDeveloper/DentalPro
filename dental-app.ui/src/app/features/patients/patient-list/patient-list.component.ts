@@ -10,6 +10,8 @@ import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
+import { TagModule } from 'primeng/tag';         // 🌟 EKLENDİ
+import { TooltipModule } from 'primeng/tooltip'; // 🌟 EKLENDİ
 import { ConfirmationService, MessageService } from 'primeng/api';
 
 import { PatientService } from '../services/patient.service';
@@ -29,7 +31,9 @@ import { ImageUploadComponent } from '../image-upload/image-upload.component';
     DialogModule, 
     ImageUploadComponent,
     ConfirmDialogModule,
-    ToastModule
+    ToastModule,
+    TagModule,     // 🌟 EKLENDİ
+    TooltipModule  // 🌟 EKLENDİ
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './patient-list.component.html'
@@ -55,7 +59,15 @@ export class PatientListComponent implements OnInit {
   getPatients() {
     this.patientService.getList().subscribe({
       next: (response: any) => {
-        this.patients = response.patients; 
+        // 🌟 Güvenli veri çıkarma yöntemi eklendi (response.patients, items, data vb.)
+        let extractedData = response.patients || response.items || response.data || response.$values || response;
+
+        if (Array.isArray(extractedData)) {
+            this.patients = extractedData;
+        } else {
+            this.patients = []; 
+        }
+        
         this.loading = false;
       },
       error: (err) => {
@@ -73,7 +85,6 @@ export class PatientListComponent implements OnInit {
   handleUploadSuccess() {
     this.uploadDialogVisible = false;
   }
-
 
   deletePatient(patient: any) {
     this.confirmationService.confirm({
@@ -100,5 +111,11 @@ export class PatientListComponent implements OnInit {
         });
       }
     });
+  }
+
+  // 🌟 EKLENDİ: Tabloda 2'den fazla etiket olduğunda, mouse üzerine gelince tamamını virgülle gösteren metot
+  getCategoryNames(categories: any[]): string {
+    if (!categories || categories.length === 0) return '';
+    return categories.map(c => c.name || c.categoryName || c.label || c).join(', ');
   }
 }
