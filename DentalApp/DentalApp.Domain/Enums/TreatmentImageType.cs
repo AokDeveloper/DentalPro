@@ -11,6 +11,7 @@ namespace DentalApp.Domain.Enums
         Intraoral = 1,    // Ağız içi
         Extraoral = 2,    // Ağız dışı (Yüz)
         XRay = 3,         // Röntgen
-        Cephalometric = 4 // Sefalometrik
+        Cephalometric = 4, // Sefalometrik
+        Profile = 5,
     }
 }

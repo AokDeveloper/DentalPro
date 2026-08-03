@@ -10,8 +10,8 @@ import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
-import { TagModule } from 'primeng/tag';         // 🌟 EKLENDİ
-import { TooltipModule } from 'primeng/tooltip'; // 🌟 EKLENDİ
+import { TagModule } from 'primeng/tag';
+import { TooltipModule } from 'primeng/tooltip';
 import { ConfirmationService, MessageService } from 'primeng/api';
 
 import { PatientService } from '../services/patient.service';
@@ -32,8 +32,8 @@ import { ImageUploadComponent } from '../image-upload/image-upload.component';
     ImageUploadComponent,
     ConfirmDialogModule,
     ToastModule,
-    TagModule,     // 🌟 EKLENDİ
-    TooltipModule  // 🌟 EKLENDİ
+    TagModule,
+    TooltipModule
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './patient-list.component.html'
@@ -45,6 +45,14 @@ export class PatientListComponent implements OnInit {
   
   uploadDialogVisible: boolean = false;
   selectedPatientIdForUpload: string = '';
+
+  // 🌟 HASTA DETAY & GEÇMİŞ RANDEVU DEĞİŞKENLERİ
+  detailDialogVisible: boolean = false;
+  detailLoading: boolean = false;
+  selectedPatientDetail: any = null;
+  
+  historyRecords: any[] = [];
+  appointmentsLoading: boolean = false;
 
   constructor(
     private patientService: PatientService,
@@ -59,7 +67,6 @@ export class PatientListComponent implements OnInit {
   getPatients() {
     this.patientService.getList().subscribe({
       next: (response: any) => {
-        // Güvenli veri çıkarma yapısı
         let extractedData = response.patients || response.items || response.data || response.$values || response;
         if (Array.isArray(extractedData)) {
             this.patients = extractedData;
@@ -71,6 +78,49 @@ export class PatientListComponent implements OnInit {
       error: (err) => {
         console.error('Hata:', err);
         this.loading = false;
+      }
+    });
+  }
+
+  openDetailDialog(patientId: string) {
+    this.detailDialogVisible = true;
+    
+    // Yükleme durumlarını başlat
+    this.detailLoading = true;
+    this.appointmentsLoading = true;
+    
+    // Eski verileri temizle
+    this.selectedPatientDetail = null;
+    this.historyRecords = [];
+
+    // 1. Hasta Detay Bilgilerini Çek
+    this.patientService.getPatientDetail(patientId).subscribe({
+      next: (res: any) => {
+        this.selectedPatientDetail = res.patient;
+        
+        // Fotoğraf URL slash düzeltmesi
+        if (this.selectedPatientDetail?.profilePhotoUrl) {
+            this.selectedPatientDetail.profilePhotoUrl = this.selectedPatientDetail.profilePhotoUrl.replace('9000//', '9000/');
+        }
+        
+        this.detailLoading = false;
+      },
+      error: (err) => {
+        this.messageService.add({ severity: 'error', summary: 'Hata', detail: 'Hasta detayları yüklenemedi.' });
+        console.error('Detay hatası:', err);
+        this.detailLoading = false;
+      }
+    });
+
+    // 2. Geçmiş Randevuları (History) Çek
+    this.patientService.getCompletedAppointments(patientId).subscribe({
+      next: (response: any) => {
+        this.historyRecords = response.completedAppointments || [];
+        this.appointmentsLoading = false;
+      },
+      error: (err) => {
+        console.error('History load error:', err);
+        this.appointmentsLoading = false;
       }
     });
   }
@@ -99,19 +149,13 @@ export class PatientListComponent implements OnInit {
             this.getPatients(); 
           },
           error: (err) => {
-            this.messageService.add({ 
-              severity: 'error', 
-              summary: 'Silme Hatası', 
-              detail: 'Hasta kaydı silinirken beklenmeyen bir sorun oluştu.' 
-            });
-            console.error('Delete error:', err);
+            this.messageService.add({ severity: 'error', summary: 'Silme Hatası', detail: 'Beklenmeyen bir sorun oluştu.' });
           }
         });
       }
     });
   }
   
-  // 🌟 EKLENDİ: Etiket taşkınını Tooltip içinde göstermek için
   getCategoryNames(categories: any[]): string {
     if (!categories || categories.length === 0) return '';
     return categories.map(c => c.name || c.categoryName || c.label || c).join(', ');

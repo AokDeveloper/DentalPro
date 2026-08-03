@@ -31,10 +31,9 @@
                 <ng-template pTemplate="header">
                     <tr>
                         <th pSortableColumn="fullName">Ad Soyad <p-sortIcon field="fullName"></p-sortIcon></th>
-                        <th pSortableColumn="tckn">Tc No <p-sortIcon field="tckn"></p-sortIcon></th>
+                       <!--  <th pSortableColumn="tckn">Tc No <p-sortIcon field="tckn"></p-sortIcon></th> -->
                         <th pSortableColumn="supervisorFullName">Danışman Hoca <p-sortIcon field="supervisorFullName"></p-sortIcon></th>
-                        <th pSortableColumn="phoneNumber">Telefon <p-sortIcon field="phoneNumber"></p-sortIcon></th>
-                        <!-- 🌟 YENİ KOLON EKLENDİ -->
+                        <!-- <th pSortableColumn="phoneNumber">Telefon <p-sortIcon field="phoneNumber"></p-sortIcon></th> -->
                         <th>Durum / Etiket</th>
                         <th pSortableColumn="birthDate">Doğum Tarihi <p-sortIcon field="birthDate"></p-sortIcon></th>                        
                         <th>İşlemler</th>
@@ -47,23 +46,18 @@
                             <span class="p-column-title">Ad Soyad</span>
                             {{patient.fullName}}
                         </td>
-
-                        <td style="width:12%; min-width:10rem;">
+                        <!-- <td style="width:12%; min-width:10rem;">
                             <span class="p-column-title">TC No</span>
                             {{patient.tckn}}
-                        </td>
-
+                        </td> -->
                         <td style="width:16%; min-width:12rem;">
                             <span class="p-column-title">Danışman Hoca</span>
                             {{patient.supervisorFullName}}
                         </td>
-
-                        <td style="width:12%; min-width:10rem;">
+                       <!--  <td style="width:12%; min-width:10rem;">
                             <span class="p-column-title">Telefon</span>
                             {{patient.phoneNumber}}
-                        </td>
-
-                        <!-- 🌟 YENİ ETİKET HÜCRESİ -->
+                        </td> -->
                         <td style="width:14%; min-width:12rem;">
                             <span class="p-column-title">Durum / Etiket</span>
                             <div class="flex flex-wrap gap-1">
@@ -78,49 +72,21 @@
                                        tooltipPosition="top"
                                        [rounded]="false">
                                 </p-tag>
-
-                                <span *ngIf="!patient.categories || patient.categories.length === 0" class="text-500 text-sm">
-                                    -
-                                </span>
+                                <span *ngIf="!patient.categories || patient.categories.length === 0" class="text-500 text-sm">-</span>
                             </div>
                         </td>
-
                         <td style="width:10%; min-width:8rem;">
                             <span class="p-column-title">Doğum Tarihi</span>
                             {{ patient.birthDate | date:'dd.MM.yyyy' }}
                         </td>                  
-
-                        <td style="width:20%; min-width:14rem;">
+                        <td style="width:20%; min-width:16rem;">
                             <div class="flex">
+                                <button pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-success mr-2" pTooltip="Profili Görüntüle" (click)="openDetailDialog(patient.id)"></button>
+                                
                                 <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning mr-2" pTooltip="Sil" (click)="deletePatient(patient)"></button>
+                                <button pButton pRipple icon="pi pi-images" class="p-button-rounded p-button-info mr-2" pTooltip="Before/After Sunumu" [routerLink]="['/patients/presentation', patient.id]"></button>
+                                <button pButton pRipple icon="pi pi-camera" class="p-button-rounded p-button-primary mr-2" pTooltip="Fotoğraf Yükle" (click)="openUploadDialog(patient.id)"></button>
                                 
-                                <button 
-                                    pButton 
-                                    pRipple 
-                                    icon="pi pi-images" 
-                                    class="p-button-rounded p-button-info mr-2" 
-                                    pTooltip="Before/After Sunumu"
-                                    [routerLink]="['/patients/presentation', patient.id]">
-                                </button>
-                                
-                                <button 
-                                    pButton 
-                                    pRipple 
-                                    icon="pi pi-camera" 
-                                    class="p-button-rounded p-button-primary  mr-2" 
-                                    pTooltip="Fotoğraf Yükle" 
-                                    (click)="openUploadDialog(patient.id)">
-                                </button>
-                                
-                                <button 
-                                    pButton 
-                                    pRipple 
-                                    icon="pi pi-history" 
-                                    class="p-button-rounded p-button-help mr-2" 
-                                    pTooltip="Geçmiş İşlemler"
-                                    [routerLink]="['/patients/history', patient.id]">
-                                </button> 
-                                 
                             </div>
                         </td>
                     </tr>
@@ -128,7 +94,6 @@
 
                 <ng-template pTemplate="emptymessage">
                     <tr>
-                        <!-- 🌟 COLSPAN 6'dan 7'ye çıkarıldı çünkü yeni kolon ekledik -->
                         <td colspan="7" class="text-center p-4">Hiç hasta kaydı bulunamadı.</td>
                     </tr>
                 </ng-template>
@@ -137,7 +102,7 @@
     </div>
 </div>
 
-<!-- 🌟 SİLİNEN ONAY PENCERESİ GERİ GELDİ -->
+<!-- SİLME ONAY PENCERESİ -->
 <p-confirmDialog #cd [style]="{width: '600px'}" [breakpoints]="{'960px': '75vw', '640px': '90vw'}">
     <ng-template pTemplate="header">
         <div class="flex align-items-center gap-3">
@@ -154,19 +119,144 @@
     </ng-template>
 </p-confirmDialog>
 
-<!-- 🌟 SİLİNEN FOTOĞRAF YÜKLEME PENCERESİ GERİ GELDİ -->
+<!-- FOTOĞRAF YÜKLEME PENCERESİ -->
+<p-dialog header="Hastaya Yeni Fotoğraf Yükle" [(visible)]="uploadDialogVisible" [modal]="true" [style]="{width: '50vw'}" [breakpoints]="{'960px': '75vw', '640px': '95vw'}" [draggable]="false" [resizable]="false">
+    <app-image-upload *ngIf="uploadDialogVisible" [patientId]="selectedPatientIdForUpload" (onUploadSuccess)="handleUploadSuccess()"></app-image-upload>
+</p-dialog>
+
+<!-- 🌟 HASTA DETAY PROFİL VE GEÇMİŞ KARTI -->
 <p-dialog 
-    header="Hastaya Yeni Fotoğraf Yükle" 
-    [(visible)]="uploadDialogVisible" 
+    header="Hasta Profili ve İşlem Geçmişi" 
+    [(visible)]="detailDialogVisible" 
     [modal]="true" 
-    [style]="{width: '50vw'}" 
-    [breakpoints]="{'960px': '75vw', '640px': '95vw'}"
+    [style]="{width: '850px'}" 
+    [breakpoints]="{'960px': '75vw', '640px': '95vw'}" 
     [draggable]="false" 
-    [resizable]="false">
+    [resizable]="false"
+    styleClass="p-fluid">
     
-    <app-image-upload 
-        *ngIf="uploadDialogVisible" 
-        [patientId]="selectedPatientIdForUpload" 
-        (onUploadSuccess)="handleUploadSuccess()">
-    </app-image-upload>
+    <!-- YÜKLENİYOR SPINNERI -->
+    <div class="flex justify-content-center align-items-center p-5" *ngIf="detailLoading">
+        <i class="pi pi-spin pi-spinner text-primary" style="font-size: 3rem;"></i>
+    </div>
+    
+    <div *ngIf="!detailLoading && selectedPatientDetail">
+        <!-- 🌟 ÜST TARAF: KİŞİSEL BİLGİLER -->
+        <div class="flex flex-column md:flex-row gap-5 align-items-center md:align-items-start p-3">
+            
+            <!-- Fotoğraf -->
+            <div class="flex flex-column align-items-center">
+                <div *ngIf="!selectedPatientDetail.profilePhotoUrl" 
+                     class="flex align-items-center justify-content-center bg-gray-200 border-circle mb-3 shadow-2" 
+                     style="width: 130px; height: 130px;">
+                    <i class="pi pi-user text-500" style="font-size: 4.5rem;"></i>
+                </div>
+                
+                <img *ngIf="selectedPatientDetail.profilePhotoUrl" 
+                     [src]="selectedPatientDetail.profilePhotoUrl" 
+                     alt="Hasta Fotoğrafı" 
+                     class="border-circle mb-3 shadow-2" 
+                     style="width: 130px; height: 130px; object-fit: cover;" />
+                
+                <span class="font-bold text-2xl text-900 text-center">{{selectedPatientDetail.firstName}} {{selectedPatientDetail.lastName}}</span>
+                <span class="text-500 font-medium mt-1">{{selectedPatientDetail.tckn}}</span>
+            </div>
+
+            <!-- Bilgiler -->
+            <div class="flex-1 w-full">
+                <ul class="list-none p-0 m-0">
+                    <li class="flex align-items-center py-3 px-2 border-bottom-1 surface-border flex-wrap">
+                        <div class="text-500 w-6 md:w-4 font-medium"><i class="pi pi-calendar mr-2"></i>Doğum Tarihi</div>
+                        <div class="text-900 w-full md:w-8 md:flex-order-0 flex-order-1 font-semibold">
+                            {{selectedPatientDetail.birthDate | date:'dd.MM.yyyy'}}
+                        </div>
+                    </li>
+                    <li class="flex align-items-center py-3 px-2 border-bottom-1 surface-border flex-wrap">
+                        <div class="text-500 w-6 md:w-4 font-medium"><i class="pi pi-phone mr-2"></i>Telefon</div>
+                        <div class="text-900 w-full md:w-8 md:flex-order-0 flex-order-1 font-semibold">
+                            {{selectedPatientDetail.phoneNumber}}
+                        </div>
+                    </li>
+                    <li class="flex align-items-center py-3 px-2 border-bottom-1 surface-border flex-wrap">
+                        <div class="text-500 w-6 md:w-4 font-medium"><i class="pi pi-users mr-2"></i>Danışman Hoca</div>
+                        <div class="text-900 w-full md:w-8 md:flex-order-0 flex-order-1 font-semibold">
+                            {{selectedPatientDetail.supervisorFullName || 'Atanmamış'}}
+                        </div>
+                    </li>
+                    <li class="flex align-items-center py-3 px-2 flex-wrap">
+                        <div class="text-500 w-12 font-medium mb-2"><i class="pi pi-tags mr-2"></i>Durum / Etiketler</div>
+                        <div class="text-900 w-full flex-order-1">
+                            <div class="flex flex-wrap gap-2">
+                                <p-tag *ngFor="let cat of selectedPatientDetail.categories" [value]="cat.name" severity="info"></p-tag>
+                                <span *ngIf="!selectedPatientDetail.categories || selectedPatientDetail.categories.length === 0" class="text-500 text-sm">
+                                    Hastaya ait bir etiket bulunmuyor.
+                                </span>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 🌟 ALT TARAF: GEÇMİŞ RANDEVULAR (Verdiğiniz Kodlar) -->
+        <div class="mt-4 pt-4 border-top-1 surface-border">
+            <h5 class="text-900 font-semibold mb-3 ml-2">
+                <i class="pi pi-history mr-2 text-primary"></i>Tamamlanmış İşlemler
+            </h5>
+
+            <!-- p-datatable-sm sınıfı ile tablo boyutu pop-up için optimize edildi -->
+            <p-table 
+                [value]="historyRecords" 
+                responsiveLayout="scroll" 
+                [loading]="appointmentsLoading" 
+                [rowHover]="true"
+                [sortField]="'date'" 
+                [sortOrder]="-1" 
+                styleClass="p-datatable-striped p-datatable-sm border-1 surface-border border-round mx-2 mb-2">
+                
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width:5%" class="text-center">#</th>
+                        <th style="width:20%" pSortableColumn="date">İşlem Tarihi <p-sortIcon field="date"></p-sortIcon></th>
+                        <th style="width:15%">İşlem Saati</th>
+                        <th style="width:60%">İşlem / Tamamlanma Notu</th>
+                    </tr>
+                </ng-template>
+                
+                <ng-template pTemplate="body" let-record let-i="rowIndex">
+                    <tr>
+                        <td class="text-center font-bold text-500"><span class="p-column-title">#</span>{{ i + 1 }}</td>
+                        <td>
+                            <span class="p-column-title">Tarih</span>
+                            <span class="font-semibold text-600">
+                                <i class="pi pi-calendar mr-2 text-primary"></i>{{ record.date | date:'dd.MM.yyyy' }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="p-column-title">Saat</span>
+                            <span class="font-semibold text-600">
+                                <i class="pi pi-clock mr-2 text-orange-500"></i>{{ record.date | date:'HH:mm' }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="p-column-title">Notlar</span>
+                            <span class="text-700 line-height-3">{{ record.completionNotes }}</span>
+                        </td>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="emptymessage">
+                    <tr>
+                        <td colspan="4" class="text-center p-4">
+                            <div class="text-500 font-medium">Bu hastaya ait tamamlanmış bir randevu kaydı bulunmamaktadır.</div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+    
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Kapat" icon="pi pi-times" class="p-button-text p-button-secondary" (click)="detailDialogVisible = false"></button>
+    </ng-template>
 </p-dialog>

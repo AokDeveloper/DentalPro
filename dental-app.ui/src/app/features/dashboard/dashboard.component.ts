@@ -19,7 +19,7 @@ import { CardModule } from 'primeng/card'; // Card modülünü ekleyelim
             <div class="card mb-0">
                 <div class="flex justify-content-between mb-3">
                     <div>
-                        <span class="block text-500 font-medium mb-3">Toplam Hasta</span>
+                        <span class="block text-500 font-medium mb-3">Sisteme Kayıtlı Hasta</span>
                         <div class="text-900 font-medium text-xl">152</div>
                     </div>
                     <div class="flex align-items-center justify-content-center bg-blue-100 border-round" style="width:2.5rem;height:2.5rem">
@@ -33,7 +33,37 @@ import { CardModule } from 'primeng/card'; // Card modülünü ekleyelim
             <div class="card mb-0">
                 <div class="flex justify-content-between mb-3">
                     <div>
-                        <span class="block text-500 font-medium mb-3">Randevular</span>
+                        <span class="block text-500 font-medium mb-3">Bugünkü Randevular</span>
+                        <div class="text-900 font-medium text-xl">25</div>
+                    </div>
+                    <div class="flex align-items-center justify-content-center bg-orange-100 border-round" style="width:2.5rem;height:2.5rem">
+                        <i class="pi pi-calendar text-orange-500 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <div class="col-12 md:col-6 lg:col-3">
+            <div class="card mb-0">
+                <div class="flex justify-content-between mb-3">
+                    <div>
+                        <span class="block text-500 font-medium mb-3">Toplam İşlem Sayısı</span>
+                        <div class="text-900 font-medium text-xl">25</div>
+                    </div>
+                    <div class="flex align-items-center justify-content-center bg-orange-100 border-round" style="width:2.5rem;height:2.5rem">
+                        <i class="pi pi-calendar text-orange-500 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 md:col-6 lg:col-3">
+            <div class="card mb-0">
+                <div class="flex justify-content-between mb-3">
+                    <div>
+                        <span class="block text-500 font-medium mb-3">Hasta Dağılımı</span>
                         <div class="text-900 font-medium text-xl">25</div>
                     </div>
                     <div class="flex align-items-center justify-content-center bg-orange-100 border-round" style="width:2.5rem;height:2.5rem">

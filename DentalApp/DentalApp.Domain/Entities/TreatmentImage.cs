@@ -15,7 +15,7 @@ namespace DentalApp.Domain.Entities
         public TreatmentImageType Type { get; private set; }
         public DateOnly RecordDate { get; private set; }
         public string? Notes { get; private set; }
-
+       // public Patient Patient { get; private set; }
         protected TreatmentImage() { }
         public TreatmentImage(Guid patientId, string imageUrl, TreatmentImageType type, DateOnly recordDate, string? notes=null)
         {

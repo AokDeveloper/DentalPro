@@ -22,7 +22,7 @@ namespace DentalApp.WebApi.Endpoints.Patients
         public override void Configure()
         {
             Get("/api/patients/{id}/images"); // {id} parametresine dikkat
-            AllowAnonymous();
+           
         }
 
         public override async Task HandleAsync(GetImagesRequest req, CancellationToken ct)

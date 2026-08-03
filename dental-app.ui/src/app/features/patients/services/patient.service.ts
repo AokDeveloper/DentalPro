@@ -5,6 +5,7 @@ import { PatientList } from '../../../core/models/patients/patientList';
 import { PatientCreate } from '../../../core/models/patients/patientCreate';
 import { Observable } from 'rxjs';
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -29,5 +30,8 @@ export class PatientService extends BaseService<PatientList> {
     // this.apiUrl zaten '/api/patients' demek. Sonuna sadece alt rotayı ekliyoruz.
     return this.httpClient.get<any[]>(`${this.apiUrl}/categories/grouped`);
   }
+  getPatientDetail(patientId: string) {
+        return this.httpClient.get(`${this.apiUrl}/${patientId}/detail`);
+  }
+  }
   
-}

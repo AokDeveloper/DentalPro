@@ -33,7 +33,8 @@ export class ImageUploadComponent {
     { label: 'Ağız İçi (Intraoral)', value: 1 },
     { label: 'Ağız Dışı / Yüz (Extraoral)', value: 2 },
     { label: 'Röntgen (X-Ray)', value: 3 },
-    { label: 'Sefalometrik (Cephalometric)', value: 4 }
+    { label: 'Sefalometrik (Cephalometric)', value: 4 },
+    { label: 'Profil Fotoğrafı', value: 5 }
   ];
 
   constructor(
