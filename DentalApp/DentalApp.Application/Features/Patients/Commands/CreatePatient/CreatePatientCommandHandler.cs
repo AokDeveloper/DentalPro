@@ -31,9 +31,10 @@ namespace DentalApp.Application.Features.Patients.Commands.CreatePatient
                 request.LastName,
                 request.TCKN,
                 request.PhoneNumber,
-                request.BirthDate,
+                request.BirthDate,               
                 currentDoctorId.Value,
-                request.SupervisorId
+                request.SupervisorId,
+                 request.PatientNotes
             );
 
             // 2. EĞER KATEGORİ SEÇİLMİŞSE, ÇOKA ÇOK İLİŞKİYİ KUR

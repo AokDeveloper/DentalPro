@@ -14,6 +14,8 @@ import { TagModule } from 'primeng/tag';
 import { TooltipModule } from 'primeng/tooltip';
 import { ConfirmationService, MessageService } from 'primeng/api';
 
+// Proje İçi Modüller & Pipe'lar
+import { AgeFormatPipe } from '../../../pipes/age-format.pipe';
 import { PatientService } from '../services/patient.service';
 import { PatientList } from '../../../core/models/patients/patientList';
 import { ImageUploadComponent } from '../image-upload/image-upload.component';
@@ -33,7 +35,8 @@ import { ImageUploadComponent } from '../image-upload/image-upload.component';
     ConfirmDialogModule,
     ToastModule,
     TagModule,
-    TooltipModule
+    TooltipModule,
+    AgeFormatPipe // 🌟 Pipe buraya eklendi
   ],
   providers: [ConfirmationService, MessageService],
   templateUrl: './patient-list.component.html'

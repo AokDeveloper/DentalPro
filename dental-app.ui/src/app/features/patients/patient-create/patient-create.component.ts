@@ -12,7 +12,8 @@ import { CalendarModule } from 'primeng/calendar';
 import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
 import { DropdownModule } from 'primeng/dropdown';
-import { MultiSelectModule } from 'primeng/multiselect'; // YENİ EKLENDİ
+import { MultiSelectModule } from 'primeng/multiselect';
+import { InputTextareaModule } from 'primeng/inputtextarea'; // 🌟 YENİ EKLENDİ (Textarea için)
 import { MessageService } from 'primeng/api';
 
 import { PatientService } from '../services/patient.service';
@@ -33,7 +34,8 @@ import { PatientCreate } from '../../../core/models/patients/patientCreate';
     ButtonModule, 
     ToastModule,
     DropdownModule,
-    MultiSelectModule // YENİ EKLENDİ
+    MultiSelectModule,
+    InputTextareaModule // 🌟 YENİ EKLENDİ
   ],
   providers: [MessageService],
   templateUrl: './patient-create.component.html'
@@ -47,15 +49,16 @@ export class PatientCreateComponent implements OnInit {
     phoneNumber: '',
     birthDate: null,
     supervisorId: null,
-    selectedCategoryIds: [] // YENİ EKLENDİ
+    selectedCategoryIds: [], 
+    patientNotes: '' // 🌟 YENİ EKLENDİ (Model içine)
   };
 
   loading: boolean = false;
   today: Date = new Date();
   supervisors: any[] = [];
   
-  groupedCategories: any[] = []; // YENİ EKLENDİ
-  categoriesLoading: boolean = true; // YENİ EKLENDİ
+  groupedCategories: any[] = []; 
+  categoriesLoading: boolean = true; 
 
   constructor(
     private patientService: PatientService,
@@ -66,15 +69,13 @@ export class PatientCreateComponent implements OnInit {
 
   ngOnInit() {
     this.loadSupervisors();
-    this.loadCategories(); // YENİ EKLENDİ
+    this.loadCategories(); 
   }
 
-  // YENİ EKLENDİ
-loadCategories() {
+  loadCategories() {
     this.categoriesLoading = true;
     this.patientService.getGroupedCategories().subscribe({
       next: (response: any) => {
-        
         let extractedData = response.categories || response.items || response.data || response.$values || response;
 
         if (Array.isArray(extractedData)) {
@@ -151,7 +152,8 @@ loadCategories() {
       phoneNumber: this.patientModel.phoneNumber,
       birthDate: formattedDate,
       supervisorId: this.patientModel.supervisorId,
-selectedCategoryIds: this.patientModel.selectedCategoryIds // YENİ EKLENDİ
+      selectedCategoryIds: this.patientModel.selectedCategoryIds,
+      patientNotes: this.patientModel.patientNotes // 🌟 YENİ EKLENDİ (Veritabanına gidecek payload)
     } as any;
 
     this.patientService.createPatient(payload).subscribe({

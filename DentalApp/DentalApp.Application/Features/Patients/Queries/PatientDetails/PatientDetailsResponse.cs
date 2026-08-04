@@ -15,10 +15,12 @@ namespace DentalApp.Application.Features.Patients.Queries.PatientDetails
         string LastName,
         string TCKN,
         string PhoneNumber,
-        DateOnly BirthDate,       
+        DateOnly BirthDate,
+        string? PatientNotes,
         string SupervisorFullName,
         string? ProfilePhotoUrl, // Sadece Profil Fotoğrafının MinIO URL'i
         List<PatientDetailCategoryDto> Categories
+        
     );
     public record PatientDetailsResponse
     {

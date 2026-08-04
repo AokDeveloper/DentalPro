@@ -18,6 +18,7 @@ namespace DentalApp.Domain.Entities
         public DateOnly BirthDate { get; private set; }
         public Guid? DoctorId { get; set; }
         public Guid? SupervisorId { get; set; }
+        public string? PatientNotes { get; private set; }
 
         public Doctor? Doctor { get; set; }
         public Supervisor? Supervisor { get; set; }
@@ -30,7 +31,7 @@ namespace DentalApp.Domain.Entities
         {
         }
 
-        public Patient(string firstName, string lastName, string tckn, string phoneNumber, DateOnly birthDate, Guid doctorId, Guid supervisorId)
+        public Patient(string firstName, string lastName, string tckn, string phoneNumber, DateOnly birthDate, Guid doctorId, Guid supervisorId, string? patientNotes)
         {
             if (string.IsNullOrWhiteSpace(firstName)) throw new InvalidActionException("İsim boş olamaz.");
 
@@ -41,6 +42,7 @@ namespace DentalApp.Domain.Entities
             BirthDate = birthDate;
             DoctorId = doctorId;
             SupervisorId = supervisorId;
+            PatientNotes = patientNotes;
         }
         // Domain Behaviors (İş Mantığı Metotları)
 

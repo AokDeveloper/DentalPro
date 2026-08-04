@@ -70,13 +70,28 @@
                     styleClass="w-full">
                 </p-dropdown>
             </div>
+            
+            <!-- 🌟 DÜZELTİLEN ALAN: col-12 kaldırıldı, label stili diğerlerine eşitlendi -->
+            <div class="field mb-4">
+                <label for="patientNotes" class="font-semibold text-700">Hasta Özel Notu</label>
+                <textarea 
+                    id="patientNotes" 
+                    pInputTextarea 
+                    [(ngModel)]="patientModel.patientNotes" 
+                    name="patientNotes"
+                    rows="4" 
+                    [autoResize]="true"
+                    class="w-full text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary" 
+                    placeholder="Hastanın alerji durumu, özel istekleri veya dikkat edilmesi gereken notları buraya girebilirsiniz...">
+                </textarea>
+            </div>
 
-            <!-- 🌟 YENİ EKLENEN KATEGORİ SEÇİM ALANI -->
-        <div class="field mb-5">
+            <div class="field mb-5">
                 <label for="categories" class="font-semibold text-700">Hasta Durumu / Etiketleri</label>
                 <p-multiSelect 
                     id="categories"
                     [options]="groupedCategories" 
+                    
                     [(ngModel)]="patientModel.selectedCategoryIds" 
                     [group]="true" 
                     

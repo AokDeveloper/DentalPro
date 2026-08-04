@@ -35,7 +35,7 @@
                         <th pSortableColumn="supervisorFullName">Danışman Hoca <p-sortIcon field="supervisorFullName"></p-sortIcon></th>
                         <!-- <th pSortableColumn="phoneNumber">Telefon <p-sortIcon field="phoneNumber"></p-sortIcon></th> -->
                         <th>Durum / Etiket</th>
-                        <th pSortableColumn="birthDate">Doğum Tarihi <p-sortIcon field="birthDate"></p-sortIcon></th>                        
+                        <th pSortableColumn="birthDate">Yaş <p-sortIcon field="birthDate"></p-sortIcon></th>                        
                         <th>İşlemler</th>
                     </tr>
                 </ng-template>
@@ -76,8 +76,9 @@
                             </div>
                         </td>
                         <td style="width:10%; min-width:8rem;">
-                            <span class="p-column-title">Doğum Tarihi</span>
-                            {{ patient.birthDate | date:'dd.MM.yyyy' }}
+                            <span class="p-column-title">Yaş</span>
+                            <!-- 🌟 ANA LİSTEDE SADECE YAŞ GÖSTERİLİYOR -->
+                            {{ patient.birthDate | ageFormat }}
                         </td>                  
                         <td style="width:20%; min-width:16rem;">
                             <div class="flex">
@@ -166,9 +167,11 @@
             <div class="flex-1 w-full">
                 <ul class="list-none p-0 m-0">
                     <li class="flex align-items-center py-3 px-2 border-bottom-1 surface-border flex-wrap">
-                        <div class="text-500 w-6 md:w-4 font-medium"><i class="pi pi-calendar mr-2"></i>Doğum Tarihi</div>
+                        <div class="text-500 w-6 md:w-4 font-medium"><i class="pi pi-calendar mr-2"></i>Doğum Tarihi ve Yaş</div>
                         <div class="text-900 w-full md:w-8 md:flex-order-0 flex-order-1 font-semibold">
+                            <!-- 🌟 DETAY PENCERESİNDE HEM TARİH HEM YAŞ GÖSTERİLİYOR -->
                             {{selectedPatientDetail.birthDate | date:'dd.MM.yyyy'}}
+                            <span class="text-600 font-normal ml-1">({{selectedPatientDetail.birthDate | ageFormat}})</span>
                         </div>
                     </li>
                     <li class="flex align-items-center py-3 px-2 border-bottom-1 surface-border flex-wrap">
@@ -194,6 +197,16 @@
                             </div>
                         </div>
                     </li>
+                    <li class="flex align-items-start py-3 px-2 border-top-1 surface-border flex-wrap">
+    <div class="text-500 w-12 font-medium mb-2">
+        <i class="pi pi-align-left mr-2"></i>Hasta Özel Notu
+    </div>
+    <div class="text-900 w-full flex-order-1 p-3 surface-100 border-round">
+        <span class="text-700 line-height-3" style="white-space: pre-wrap;">
+            {{ selectedPatientDetail.patientNotes || 'Bu hasta için girilmiş özel bir not bulunmamaktadır.' }}
+        </span>
+    </div>
+</li>
                 </ul>
             </div>
         </div>

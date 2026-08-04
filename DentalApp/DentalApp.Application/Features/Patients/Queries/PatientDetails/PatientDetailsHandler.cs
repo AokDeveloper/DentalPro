@@ -29,6 +29,7 @@ namespace DentalApp.Application.Features.Patients.Queries.PatientDetails
                     p.TCKN,
                     p.PhoneNumber,
                     p.BirthDate,
+                    p.PatientNotes,
                     p.Supervisor != null ? $"{p.Supervisor.FullName} " : "Atanmadı",
 
                     p.TreatmentImages
