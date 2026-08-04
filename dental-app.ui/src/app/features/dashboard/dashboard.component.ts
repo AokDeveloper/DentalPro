@@ -11,7 +11,7 @@ import { CardModule } from 'primeng/card'; // Card modülünü ekleyelim
         <div class="col-12">
             <div class="card">
                 <h5>DentalApp Dashboard</h5>
-                <p>Sistem başarıyla çalışıyor ve layout oturmuş durumda.</p>
+                <p>Sistem başarıyla çalışıyor.</p>
             </div>
         </div>
 
